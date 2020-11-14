@@ -20,5 +20,5 @@ Hopefully ability to double click and run should be implemented soon.
 Pre-compiled prgorams may be outdated so to ensure that you get a fully updated version of the program it is recommended that you compile triangle-calculator.cpp yourself, instructions for how to do this should come soon.
 
 Use:  
-When the program load's enter in any known value's for angle's or side's on the triangle as well the side or angle to be calculated. If it is possible based off of that information it will calculate the side or angle specified by working out the equation to use through basic logic and then entering value's into the formula.
+When the program load's enter in any known value's for angle's or side's on the triangle as well the side or angle to be calculated. If it is possible based off of that information it will calculate the side or angle specified by working out the equation to use through basic logic and then entering value's into the formula.  
 Note - This program currently cannot calculate the value of one side or angle if calculating that would mean it would have the right information to calculate the requested side or angle, that is possible to implement but has not been done yet.
