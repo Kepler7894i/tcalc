@@ -7,7 +7,16 @@ This repository is the source code for a c++ program that automatically work's o
 This program is in alpha currently as not all feature's are fully implemented yet, if you find any bugs please report them in the issues section of the repositry.  
 This shall be updated as the project develop's and so has been created as it's own branch.
 
-Install: If you have a 64-bit Windows download triangle-calculator-windows10-x64.exe and if you have a 32-bit Windows download triangle-calculator-windows10-x86.exe (if you don't know what os you have then download triangle-calculator-x86.exe). If you have 64-bit Linux then download triangle-calculator-linux-x64, if you have 32-bit linux then download triangle-calculator-linux-x86, these should come soon.
+Install:
+For a 32-bit Windows OS download triangle-calculator-windows10-x86.exe
+For a 64-bit Windows OS download triangle-calculator-windows10-x86.exe
+For a 32-bit Linux OS download triangle-calculator-linux-x86
+For a 64-bit Linux OS download triangle-calculator-linux-x64
+
+To run:
+Windows will allow you to run the program by double clicking on it as an exe
+Linux will allow you to run the program with ./program_name
+Hopefully ability to double click and run should be implemented soon.
 
 Pre-compiled prgorams may be outdated so to ensure that you get a fully updated version of the program it is recommended that you compile triangle-calculator.cpp yourself, instructions for how to do this should come soon.
 
