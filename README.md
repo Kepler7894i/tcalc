@@ -4,7 +4,7 @@ Please read this file in full.
 
 This repository is for a C++ program that uses logic gates to work out which equation to use for triangle calculation's and then calculates the solution based only off known values of the triangle and no other information, designed to be as automated as possible.
 
-This program is in stable currently as all feature's are implemented (but more may be added if requested or required), if you find any bugs please report them in the issues section of the repository.  
+This program is in beta currently as all feature's are implemented (but more may be added if requested or required), if you find any bugs please report them in the issues section of the repository.  
 
 Downloads:  
 Windows 32-bit - Download triangle-calculator-windows10-x86.exe  
