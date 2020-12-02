@@ -6,437 +6,459 @@ using namespace std;
 
 double pi = 3.14159;
 
-void radianDegrees(double &ansReference, double calcOutput){
+void radianDegrees(double& ansReference, double calcOutput) {
     ansReference = (calcOutput * 180) / pi;
 }
 
-int main(){
-    double A = 0, B = 0, C = 0, Ar = 0, Br = 0, Cr = 0, a = 0, b = 0, c = 0, ans = 0, inf_angle[3], inf_angle_radian[3], inf_side[3];
-    int i = 0, inf_angles_present = 0, inf_sides_present = 0, inf_values_present = 0;
+void error(int error, string x) {
+    switch (error) {
+        case 1:
+            cout << "\n\n" << "Error: Invalid angle input" << "\n";
+            cout << "Please enter valid angle's (must add to 180 degree's)." << "\n\n";
+        case 2:
+            cout << "Error: " << x << " is incalculabe with information provided." << "\n\n";
+    }
+}
+
+int main() {
+    int i, inf_angles_present = 0, inf_sides_present = 0, inf_values_present = 0;
+    double ans = 0, inf_angle[3], inf_radian[3], inf_side[3];
     string x;
+
+    class Triangle
+    {
+        public:
+            double A = 0, B = 0, C = 0;
+            double Ar = 0, Br = 0, Cr = 0;
+            double a = 0, b = 0, c = 0;
+
+            void degreesRadians(double& radians, double& radians_array, double& degrees)
+            {
+                radians = (degrees * pi) / 180;
+                radians_array = radians;
+            }
+    };
+
+    Triangle Info;
 
     cout << "Please input corresponding angle and side value's. Enter 0 if no value present" << "\n";
     cout << "(Capital=Angle, Lowercase=Side.)" << "\n" << "\n";
 
     cout << "\t" << "A = ";
-    cin >> A;
-    inf_angle[0] = A;
-    Ar = A * pi / 180;
-    inf_angle_radian[0] = Ar;
+    cin >> Info.A;
+    Info.degreesRadians(Info.Ar, inf_radian[0], Info.A);
 
     cout << "\t" << "B = ";
-    cin >> B;
-    inf_angle[1] = B;
-    Br = B * pi / 180;
-    inf_angle_radian[1] = Br;
+    cin >> Info.B;
+    inf_angle[1] = Info.B;
+    Info.degreesRadians(Info.Br, inf_radian[1], Info.B);
 
     cout << "\t" << "C = ";
-    cin >> C;
-    inf_angle[2] = C;
-    Cr = C * pi / 180;
-    inf_angle_radian[2] = Cr;
+    cin >> Info.C;
+    inf_angle[2] = Info.C;
+    Info.degreesRadians(Info.Cr, inf_radian[2], Info.C);
+
+    //input check
+    if ((Info.A + Info.B + Info.C) > 180) {
+        error(1, x);
+        main();
+        return 1;
+    }
 
     cout << "\t" << "a = ";
-    cin >> a;
-    inf_side[0] = a;
+    cin >> Info.a;
+    inf_side[0] = Info.a;
 
     cout << "\t" << "b = ";
-    cin >> b;
-    inf_side[1] = b;
+    cin >> Info.b;
+    inf_side[1] = Info.b;
 
     cout << "\t" << "c = ";
-    cin >> c;
-    inf_side[2] = c;
+    cin >> Info.c;
+    inf_side[2] = Info.c;
 
     cout << "\n";
 
-    //input check
-    if (A + B + C != 180 && A != 0 && B != 0 && C != 0){
-        cout << "Please enter valid angle's (must add to 180 degree's)." << "\n" << "\n";
-        main();
-    }
-
-    cout << "Angle's: " << A << ", " << B << ", " << C << "\n";
-    cout << "Radian's: " << Ar << ", " << Br << ", " << Cr << "\n";
-    cout << "Side's: " << a << ", " << b << ", " << c << "\n";
+    cout << "Angle's: " << Info.A << ", " << Info.B << ", " << Info.C << "\n";
+    cout << "Radian's: " << Info.Ar << ", " << Info.Br << ", " << Info.Cr << "\n";
+    cout << "Side's: " << Info.a << ", " << Info.b << ", " << Info.c << "\n";
 
     //error - inf_values_present always = 0
-    for (i = 0; i < 3; i++){
-        if (inf_angle[i] != 0){
+    for (i = 0; i < 3; i++) {
+        if (inf_angle[i] != 0) {
             ++inf_angles_present;
         }
-        if (inf_side[i] != 0){
+        if (inf_side[i] != 0) {
             ++inf_sides_present;
         }
     }
-    
+
     inf_values_present = inf_angles_present + inf_sides_present;
-    cout << "No. of value's present: "<< inf_values_present << "\n" << "\n";
+    cout << "No. of value's present: " << inf_values_present << "\n" << "\n";
 
     cout << "What would you like to calculate (capital=angle, lowercase=side): ";
     cin >> x;
     cout << "\n";
 
-    //Main calculations
     //Calc. angle's when 2 angle's known - 180 degree's in tirangle
-    if (x == "A" && B != 0 && C != 0){
-        ans = 180 - B - C;
+    if (x == "A" && Info.B != 0 && Info.C != 0) {
+        ans = 180 - Info.B - Info.C;
     }
-    else if (x == "B" && A != 0 && C != 0){
-        ans = 180 - A - C;
+    else if (x == "B" && Info.A != 0 && Info.C != 0) {
+        ans = 180 - Info.A - Info.C;
     }
-    else if (x == "C" && B != 0 && A != 0){
-        ans = 180 - B - A;
+    else if (x == "C" && Info.B != 0 && Info.A != 0) {
+        ans = 180 - Info.B - Info.A;
     }
-    else if (A == 90 || B == 90 || C == 90){
+    else if (Info.A == 90 || Info.B == 90 || Info.C == 90) {
         //Calc. side's when 2 side's known - pyth
-        if ((x == "a" || x == "b" || x == "c") && inf_sides_present == 2){
-            if (A == 90){
-                if (x == "a" && b != 0 && c != 0){
-                    ans = sqrt(b * b + c * c);
+        if ((x == "a" || x == "b" || x == "c") && inf_sides_present == 2) {
+            if (Info.A == 90) {
+                if (x == "a" && Info.b != 0 && Info.c != 0) {
+                    ans = sqrt(pow(Info.b, 2) + pow(Info.c, 2));
                 }
-                else if (x == "b" && a != 0 && c != 0){
-                    ans = sqrt(a * a - c * c);
+                else if (x == "b" && Info.a != 0 && Info.c != 0) {
+                    ans = sqrt(pow(Info.a, 2) - pow(Info.c, 2));
                 }
-                else if (x == "c" && a != 0 && b != 0){
-                    ans = sqrt(a * a - b * b);
-                }
-            }
-            else if (B == 90){
-                if (x == "a" && b != 0 && c != 0){
-                    ans = sqrt(b * b - c * c);
-                }
-                else if (x == "b" && a != 0 && c != 0){
-                    ans = sqrt(a * a + c * c);
-                }
-                else if (x == "c" && a != 0 && b != 0){
-                    ans = sqrt(b * b - a * a);
+                else if (x == "c" && Info.a != 0 && Info.b != 0) {
+                    ans = sqrt(pow(Info.a, 2) - pow(Info.b, 2));
                 }
             }
-            else if (C == 90){
-                if (x == "a" && b != 0 && c != 0){
-                    ans = sqrt(c * c - b * b);
+            else if (Info.B == 90) {
+                if (x == "a" && Info.b != 0 && Info.c != 0) {
+                    ans = sqrt(pow(Info.b, 2) - pow(Info.c, 2));
                 }
-                else if (x == "b" && a != 0 && c != 0){
-                    ans = sqrt(c * c - a * a);
+                else if (x == "b" && Info.a != 0 && Info.c != 0) {
+                    ans = sqrt(pow(Info.a, 2) + pow(Info.c, 2));
                 }
-                else if (x == "c" && a != 0 && b != 0){
-                    ans = sqrt(a * a + b * b);
+                else if (x == "c" && Info.a != 0 && Info.b != 0) {
+                    ans = sqrt(pow(Info.b, 2) - pow(Info.a, 2));
+                }
+            }
+            else if (Info.C == 90) {
+                if (x == "a" && Info.b != 0 && Info.c != 0) {
+                    ans = sqrt(pow(Info.c, 2) - pow(Info.b, 2));
+                }
+                else if (x == "b" && Info.a != 0 && Info.c != 0) {
+                    ans = sqrt(pow(Info.c, 2) - pow(Info.a, 2));
+                }
+                else if (x == "c" && Info.a != 0 && Info.b != 0) {
+                    ans = sqrt(pow(Info.a, 2) + pow(Info.b, 2));
                 }
             }
         }
         //Calc. side's when 1 side and 1 >= angle known (1 must be 90) - trig (functions)
-        else if ((x == "a" || x == "b" || x =="c") && inf_angles_present >= 1 && inf_sides_present == 1){
-            if (A == 90){
-                if (x == "a"){
-                    if (B != 0){
-                        if (b != 0){
-                            ans = b / sin(Br);
+        else if ((x == "a" || x == "b" || x == "c") && inf_angles_present >= 1 && inf_sides_present == 1) {
+            if (Info.A == 90) {
+                if (x == "a") {
+                    if (Info.B != 0) {
+                        if (Info.b != 0) {
+                            ans = Info.b / sin(Info.Br);
                         }
-                        else if (c != 0){
-                            ans = c / cos(Br);
-                        }
-                    }
-                    else if (C != 0){
-                        if (c != 0){
-                            ans = c / sin(Cr);
-                        }
-                        else if (b != 0){
-                            ans = b / cos(Cr);
+                        else if (Info.c != 0) {
+                            ans = Info.c / cos(Info.Br);
                         }
                     }
-                }
-                else if (x == "b"){
-                    if (B != 0){
-                        if (a != 0){
-                            ans = sin(Br) * a;
+                    else if (Info.C != 0) {
+                        if (Info.c != 0) {
+                            ans = Info.c / sin(Info.Cr);
                         }
-                        else if (c != 0){
-                            ans = tan(Br) * c;
-                        }
-                    }
-                    else if (C != 0){
-                        if (a != 0){
-                            ans = cos(Cr) * a;
-                        }
-                        else if (c != 0){
-                            ans = c / tan(Cr);
+                        else if (Info.b != 0) {
+                            ans = Info.b / cos(Info.Cr);
                         }
                     }
                 }
-                else if (x == "c"){
-                    if (B != 0){
-                        if (a != 0){
-                            ans = cos(Br) * a;
+                else if (x == "b") {
+                    if (Info.B != 0) {
+                        if (Info.a != 0) {
+                            ans = sin(Info.Br) * Info.a;
                         }
-                        else if (b != 0){
-                            ans = b / tan(Br);
-                        }
-                    }
-                    else if (C != 0){
-                        if (a != 0){
-                            ans = sin(Cr) * a;
-                        }
-                        else if (b != 0){
-                            ans = tan(Cr) * b;
+                        else if (Info.c != 0) {
+                            ans = tan(Info.Br) * Info.c;
                         }
                     }
-                }
-            }
-            else if (B == 90){
-                if (x == "a"){
-                    if (A != 0){
-                        if (b != 0){
-                            ans = sin(Ar) * b;
+                    else if (Info.C != 0) {
+                        if (Info.a != 0) {
+                            ans = cos(Info.Cr) * Info.a;
                         }
-                        else if (c != 0){
-                            ans = tan(Ar) * c;
-                        }
-                    }
-                    else if (C != 0){
-                        if (c != 0){
-                            ans = c / tan(Cr);
-                        }
-                        else if (b != 0){
-                            ans = cos(Cr) * b;
+                        else if (Info.c != 0) {
+                            ans = Info.c / tan(Info.Cr);
                         }
                     }
                 }
-                else if (x == "b"){
-                    if (A != 0){
-                        if (a != 0){
-                            ans = a / sin(Ar);
+                else if (x == "c") {
+                    if (Info.B != 0) {
+                        if (Info.a != 0) {
+                            ans = cos(Info.Br) * Info.a;
                         }
-                        else if (c != 0){
-                            ans = c / cos(Ar);
-                        }
-                    }
-                    else if (C != 0){
-                        if (a != 0){
-                            ans = a / cos(Cr);
-                        }
-                        else if (c != 0){
-                            ans = c / sin(Cr);
+                        else if (Info.b != 0) {
+                            ans = Info.b / tan(Info.Br);
                         }
                     }
-                }
-                else if (x == "c"){
-                    if (A != 0){
-                        if (a != 0){
-                            ans = a / tan(Ar);
+                    else if (Info.C != 0) {
+                        if (Info.a != 0) {
+                            ans = sin(Info.Cr) * Info.a;
                         }
-                        else if (b != 0){
-                            ans = cos(Br) * b;
-                        }
-                    }
-                    else if (C != 0){
-                        if (a != 0){
-                            ans = tan(Cr) * a;
-                        }
-                        else if (b != 0){
-                            ans = sin(Cr) * b;
+                        else if (Info.b != 0) {
+                            ans = tan(Info.Cr) * Info.b;
                         }
                     }
                 }
             }
-            else if (C == 90){
-                if (x == "a"){
-                    if (A != 0){
-                        if (b != 0){
-                            ans = tan(Br) * b;
+            else if (Info.B == 90) {
+                if (x == "a") {
+                    if (Info.A != 0) {
+                        if (Info.b != 0) {
+                            ans = sin(Info.Ar) * Info.b;
                         }
-                        else if (c != 0){
-                            ans = sin(Br) * c;
-                        }
-                    }
-                    else if (B != 0){
-                        if (b != 0) {
-                            ans = b / sin(Br);
-                        }
-                        else if (c != 0) {
-                            ans = cos(Br) * c;
+                        else if (Info.c != 0) {
+                            ans = tan(Info.Ar) * Info.c;
                         }
                     }
-                }
-                else if (x == "b"){
-                    if (A != 0){
-                        if (a != 0){
-                            ans = a / tan(Ar);
+                    else if (Info.C != 0) {
+                        if (Info.c != 0) {
+                            ans = Info.c / tan(Info.Cr);
                         }
-                        else if (c != 0){
-                            ans = cos(Ar) * c;
-                        }
-                    }
-                    else if (B != 0) {
-                        if (a != 0) {
-                            ans = tan(Br) * a;
-                        }
-                        else if (c != 0) {
-                            ans = sin(Br) * c;
+                        else if (Info.b != 0) {
+                            ans = cos(Info.Cr) * Info.b;
                         }
                     }
                 }
-                else if (x == "c"){
-                    if (A != 0){
-                        if (a != 0){
-                            ans = a / sin(Ar);
+                else if (x == "b") {
+                    if (Info.A != 0) {
+                        if (Info.a != 0) {
+                            ans = Info.a / sin(Info.Ar);
                         }
-                        else if (b != 0){
-                            ans = b / cos(Ar);
+                        else if (Info.c != 0) {
+                            ans = Info.c / cos(Info.Ar);
                         }
                     }
-                    else if (B != 0){
-                        if (a != 0){
-                            ans = a / cos(Br);
+                    else if (Info.C != 0) {
+                        if (Info.a != 0) {
+                            ans = Info.a / cos(Info.Cr);
                         }
-                        else if (b != 0){
-                            ans = b / sin(Br);
+                        else if (Info.c != 0) {
+                            ans = Info.c / sin(Info.Cr);
+                        }
+                    }
+                }
+                else if (x == "c") {
+                    if (Info.A != 0) {
+                        if (Info.a != 0) {
+                            ans = Info.a / tan(Info.Ar);
+                        }
+                        else if (Info.b != 0) {
+                            ans = cos(Info.Br) * Info.b;
+                        }
+                    }
+                    else if (Info.C != 0) {
+                        if (Info.a != 0) {
+                            ans = tan(Info.Cr) * Info.a;
+                        }
+                        else if (Info.b != 0) {
+                            ans = sin(Info.Cr) * Info.b;
+                        }
+                    }
+                }
+            }
+            else if (Info.C == 90) {
+                if (x == "a") {
+                    if (Info.A != 0) {
+                        if (Info.b != 0) {
+                            ans = tan(Info.Br) * Info.b;
+                        }
+                        else if (Info.c != 0) {
+                            ans = sin(Info.Br) * Info.c;
+                        }
+                    }
+                    else if (Info.B != 0) {
+                        if (Info.b != 0) {
+                            ans = Info.b / sin(Info.Br);
+                        }
+                        else if (Info.c != 0) {
+                            ans = cos(Info.Br) * Info.c;
+                        }
+                    }
+                }
+                else if (x == "b") {
+                    if (Info.A != 0) {
+                        if (Info.a != 0) {
+                            ans = Info.a / tan(Info.Ar);
+                        }
+                        else if (Info.c != 0) {
+                            ans = cos(Info.Ar) * Info.c;
+                        }
+                    }
+                    else if (Info.B != 0) {
+                        if (Info.a != 0) {
+                            ans = tan(Info.Br) * Info.a;
+                        }
+                        else if (Info.c != 0) {
+                            ans = sin(Info.Br) * Info.c;
+                        }
+                    }
+                }
+                else if (x == "c") {
+                    if (Info.A != 0) {
+                        if (Info.a != 0) {
+                            ans = Info.a / sin(Info.Ar);
+                        }
+                        else if (Info.b != 0) {
+                            ans = Info.b / cos(Info.Ar);
+                        }
+                    }
+                    else if (Info.B != 0) {
+                        if (Info.a != 0) {
+                            ans = Info.a / cos(Info.Br);
+                        }
+                        else if (Info.b != 0) {
+                            ans = Info.b / sin(Info.Br);
                         }
                     }
                 }
             }
         }
         //Calc. angle's when 2 sides known and 90 angle known - trig (functions)
-        else if ((A == 90 || B == 90 || C == 90) && inf_sides_present == 2){
+        else if ((Info.A == 90 || Info.B == 90 || Info.C == 90) && inf_sides_present == 2) {
             //Hyp = opp of 90 degree angle, Opp = opp of angle to be calculated, Adj = other side
-            if (A == 90){
-                if (x == "B"){
-                    if (a != 0 && b != 0){
-                        radianDegrees(ans, asin(b / a));
+            if (Info.A == 90) {
+                if (x == "B") {
+                    if (Info.a != 0 && Info.b != 0) {
+                        radianDegrees(ans, asin(Info.b / Info.a));
                     }
-                    else if (a != 0 && c != 0){
-                        radianDegrees(ans, acos(c / a));
+                    else if (Info.a != 0 && Info.c != 0) {
+                        radianDegrees(ans, acos(Info.c / Info.a));
                     }
-                    else if (b != 0 && c != 0){
-                        radianDegrees(ans, atan(b / c));
-                    }
-                }
-                else if (x == "C"){
-                    if (a != 0 && c != 0){
-                        radianDegrees(ans, asin(c / a));
-                    }
-                    else if (a != 0 && b != 0){
-                        radianDegrees(ans, acos(b / a));
-                    }
-                    else if (b != 0 && c != 0){
-                        radianDegrees(ans, atan(c / b));
+                    else if (Info.b != 0 && Info.c != 0) {
+                        radianDegrees(ans, atan(Info.b / Info.c));
                     }
                 }
-            }
-            else if (B == 90){
-                if (x == "A"){
-                    if (a != 0 && b != 0){
-                        radianDegrees(ans, asin(a / b));
+                else if (x == "C") {
+                    if (Info.a != 0 && Info.c != 0) {
+                        radianDegrees(ans, asin(Info.c / Info.a));
                     }
-                    else if (a != 0 && c != 0){
-                        radianDegrees(ans, acos(c / a));
+                    else if (Info.a != 0 && Info.b != 0) {
+                        radianDegrees(ans, acos(Info.b / Info.a));
                     }
-                    else if (b != 0 && c != 0){
-                        radianDegrees(ans, atan(b / c));
-                    }
-                }
-                else if (x == "C"){
-                    if (c != 0 && b != 0){
-                        radianDegrees(ans, asin(c / b));
-                    }
-                    else if (a != 0 && b != 0){
-                        radianDegrees(ans, acos(b / a));
-                    }
-                    else if (b != 0 && c != 0){
-                        radianDegrees(ans, atan(c / b));
+                    else if (Info.b != 0 && Info.c != 0) {
+                        radianDegrees(ans, atan(Info.c / Info.b));
                     }
                 }
             }
-            else if (C == 90){
-                if (x == "A")
-                {
-                    if (a != 0 && c != 0){
-                        radianDegrees(ans, asin(a / c));
+            else if (Info.B == 90) {
+                if (x == "A") {
+                    if (Info.a != 0 && Info.b != 0) {
+                        radianDegrees(ans, asin(Info.a / Info.b));
                     }
-                    else if (b != 0 && c != 0){
-                        radianDegrees(ans, acos(b / c));
+                    else if (Info.a != 0 && Info.c != 0) {
+                        radianDegrees(ans, acos(Info.c / Info.a));
                     }
-                    else if (a != 0 && b != 0){
-                        radianDegrees(ans, atan(a / b));
+                    else if (Info.b != 0 && Info.c != 0) {
+                        radianDegrees(ans, atan(Info.b / Info.c));
                     }
                 }
-                else if (x == "B"){
-                    if (b != 0 && c != 0){
-                        radianDegrees(ans, asin(b / c));
+                else if (x == "C") {
+                    if (Info.c != 0 && Info.b != 0) {
+                        radianDegrees(ans, asin(Info.c / Info.b));
                     }
-                    else if (a != 0 && c != 0){
-                        radianDegrees(ans, acos(a / c));
+                    else if (Info.a != 0 && Info.b != 0) {
+                        radianDegrees(ans, acos(Info.b / Info.a));
                     }
-                    else if (a != 0 && b != 0){
-                        radianDegrees(ans, atan(b / a));
+                    else if (Info.b != 0 && Info.c != 0) {
+                        radianDegrees(ans, atan(Info.c / Info.b));
+                    }
+                }
+            }
+            else if (Info.C == 90) {
+                if (x == "A") {
+                    if (Info.a != 0 && Info.c != 0) {
+                        radianDegrees(ans, asin(Info.a / Info.c));
+                    }
+                    else if (Info.b != 0 && Info.c != 0) {
+                        radianDegrees(ans, acos(Info.b / Info.c));
+                    }
+                    else if (Info.a != 0 && Info.b != 0) {
+                        radianDegrees(ans, atan(Info.a / Info.b));
+                    }
+                }
+                else if (x == "B") {
+                    if (Info.b != 0 && Info.c != 0) {
+                        radianDegrees(ans, asin(Info.b / Info.c));
+                    }
+                    else if (Info.a != 0 && Info.c != 0) {
+                        radianDegrees(ans, acos(Info.a / Info.c));
+                    }
+                    else if (Info.a != 0 && Info.b != 0) {
+                        radianDegrees(ans, atan(Info.b / Info.a));
                     }
                 }
             }
         }
     }
     //Sine and cosine rule's can also be used for right angled triangle's but I see no reason to do that and so haven't programmed that functionality in, I will if I discover a use later down the line
-    else if (A != 90 && B != 90 && C != 90){
+    else if (Info.A != 90 && Info.B != 90 && Info.C != 90) {
         //Calc. angle's when 2 side's & 1 angle known - trig (sine rule)
-        if (x == "A" && a != 0 && B != 0 && b != 0){
-            radianDegrees(ans, asin(a* sin(Br) / b));
+        if (x == "A" && Info.a != 0 && Info.B != 0 && Info.b != 0) {
+            radianDegrees(ans, asin(Info.a * sin(Info.Br) / Info.b));
         }
-        else if (x == "A" && a != 0 && C != 0 && c != 0){
-            radianDegrees(ans, asin(a* sin(Cr) / c));
+        else if (x == "A" && Info.a != 0 && Info.C != 0 && Info.c != 0) {
+            radianDegrees(ans, asin(Info.a * sin(Info.Cr) / Info.c));
         }
-        else if (x == "B" && b != 0 && A != 0 && a != 0){
-            radianDegrees(ans, asin(b* sin(Ar) / a));
+        else if (x == "B" && Info.b != 0 && Info.A != 0 && Info.a != 0) {
+            radianDegrees(ans, asin(Info.b * sin(Info.Ar) / Info.a));
         }
-        else if (x == "B" && a != 0 && B != 0 && b != 0){
-            radianDegrees(ans, asin(b* sin(Cr) / c));
+        else if (x == "B" && Info.a != 0 && Info.B != 0 && Info.b != 0) {
+            radianDegrees(ans, asin(Info.b * sin(Info.Cr) / Info.c));
         }
-        else if (x == "C" && a != 0 && B != 0 && b != 0){
-            radianDegrees(ans, asin(c* sin(Ar) / a));
+        else if (x == "C" && Info.a != 0 && Info.B != 0 && Info.b != 0) {
+            radianDegrees(ans, asin(Info.c * sin(Info.Ar) / Info.a));
         }
-        else if (x == "C" && a != 0 && B != 0 && b != 0){
-            radianDegrees(ans, asin(c* sin(Br) / b));
+        else if (x == "C" && Info.a != 0 && Info.B != 0 && Info.b != 0) {
+            radianDegrees(ans, asin(Info.c * sin(Info.Br) / Info.b));
         }
         //Calc. side's when 1 angle & 2 side's known - trig (sine rule)
-        else if (x == "a" && A != 0 && B != 0 && b != 0){
-            ans = sin(Ar) * b / sin(B);
+        else if (x == "a" && Info.A != 0 && Info.B != 0 && Info.b != 0) {
+            ans = sin(Info.Ar) * Info.b / sin(Info.Br);
         }
-        else if (x == "a" && A != 0 && C != 0 && c != 0){
-            ans = sin(Ar) * b / sin(B);
+        else if (x == "a" && Info.A != 0 && Info.C != 0 && Info.c != 0) {
+            ans = sin(Info.Ar) * Info.b / sin(Info.Br);
         }
-        else if (x == "b" && B != 0 && A != 0 && a != 0){
-            ans = sin(Ar) * b / sin(B);
+        else if (x == "b" && Info.B != 0 && Info.A != 0 && Info.a != 0) {
+            ans = sin(Info.Ar) * Info.b / sin(Info.Br);
         }
-        else if (x == "b" && B != 0 && C != 0 && c != 0){
-            ans = sin(Ar) * b / sin(B);
+        else if (x == "b" && Info.B != 0 && Info.C != 0 && Info.c != 0) {
+            ans = sin(Info.Ar) * Info.b / sin(Info.Br);
         }
-        else if (x == "c" && C != 0 && A != 0 && a != 0){
-            ans = sin(Ar) * b / sin(B);
+        else if (x == "c" && Info.C != 0 && Info.A != 0 && Info.a != 0) {
+            ans = sin(Info.Ar) * Info.b / sin(Info.Br);
         }
-        else if (x == "c" && C != 0 && B != 0 && b != 0){
-            ans = sin(Ar) * b / sin(B);
+        else if (x == "c" && Info.C != 0 && Info.B != 0 && Info.b != 0) {
+            ans = sin(Info.Ar) * Info.b / sin(Info.Br);
         }
         //Calc. angle's when 1 angle and 2 side's known - trig (cosine rule)
-        else if (x == "A" && a != 0 && b != 0 && c != 0){
-            radianDegrees(ans, acos(((b* b) + (c * c) - (a * a)) / 2 * b * c));
+        else if (x == "A" && Info.a != 0 && Info.b != 0 && Info.c != 0) {
+            radianDegrees(ans, acos(((pow(Info.b, 2)) + (pow(Info.c, 2)) - (pow(Info.a, 2))) / 2 * Info.b * Info.c));
         }
-        else if (x == "B" && a != 0 && b != 0 && c != 0){
-            radianDegrees(ans, acos(((a* a) + (c * c) - (b * b)) / 2 * a * c));
+        else if (x == "B" && Info.a != 0 && Info.b != 0 && Info.c != 0) {
+            radianDegrees(ans, acos(((pow(Info.a, 2)) + (pow(Info.c, 2)) - (pow(Info.b, 2))) / 2 * Info.a * Info.c));
         }
-        else if (x == "C" && a != 0 && b != 0 && c != 0){
-            radianDegrees(ans, acos(((a* a) + (b * b) - (c * c)) / 2 * a * b));
+        else if (x == "C" && Info.a != 0 && Info.b != 0 && Info.c != 0) {
+            radianDegrees(ans, acos(((pow(Info.a, 2)) + (pow(Info.b, 2)) - (pow(Info.c, 2))) / 2 * Info.a * Info.b));
         }
         //Calc. side's when 1 angle and 2 side's known - trig (cosine rule)
-        else if (x == "a" && A != 0 && b != 0 && c != 0){
-            ans = sqrt((b * b) + (c * c) - (2 * b * c * cos(Ar)));
+        else if (x == "a" && Info.A != 0 && Info.b != 0 && Info.c != 0) {
+            ans = sqrt((pow(Info.b, 2)) + (pow(Info.c, 2)) - (2 * Info.b * Info.c * cos(Info.Ar)));
         }
-        else if (x == "b" && B != 0 && a != 0 && c != 0){
-            ans = sqrt((a * a) + (c * c) - (2 * a * c * cos(Br)));
+        else if (x == "b" && Info.B != 0 && Info.a != 0 && Info.c != 0) {
+            ans = sqrt((pow(Info.a, 2)) + (pow(Info.c, 2)) - (2 * Info.a * Info.c * cos(Info.Br)));
         }
-        else if (x == "c" && C != 0 && a != 0 && b != 0){
-            ans = sqrt((a * a) + (b * b) - (2 * a * b * cos(Cr)));
+        else if (x == "c" && Info.C != 0 && Info.a != 0 && Info.b != 0) {
+            ans = sqrt((pow(Info.a, 2)) + (pow(Info.b, 2)) - (2 * Info.a * Info.b * cos(Info.Cr)));
         }
     }
-    else{
-        cout << x << " is uncalculabe with information provided." << "\n";
+    else {
+        error(2, x);
+        return 1;
     }
 
     cout << x << " = " << ans << "\n";
