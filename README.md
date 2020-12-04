@@ -2,7 +2,7 @@
 
 Please read this file in full.
 
-This repository is for a C++ program that uses logic to find the equation & calculate with the equation to find the requested property of the triangle based off of known properties of the triangle, designed to be as automated as possible.
+This repository is for a C++ program that uses logic to find the best equation & calculate requested property of the triangle using it based off of known properties of the triangle. Designed to be as automated as possible.
 
 This program is in beta currently as all feature's are implemented (but more may be added if requested or required), if you find any bugs please report them in the issues section of the repository.  
 
