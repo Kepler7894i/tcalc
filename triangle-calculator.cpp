@@ -27,16 +27,16 @@ int main() {
 
     class Triangle
     {
-        public:
-            double A = 0, B = 0, C = 0;
-            double Ar = 0, Br = 0, Cr = 0;
-            double a = 0, b = 0, c = 0;
+    public:
+        double A = 0, B = 0, C = 0;
+        double Ar = 0, Br = 0, Cr = 0;
+        double a = 0, b = 0, c = 0;
 
-            void degreesRadians(double& radians, double& radians_array, double& degrees)
-            {
-                radians = (degrees * pi) / 180;
-                radians_array = radians;
-            }
+        void degreesRadians(double& radians, double& radians_array, double& degrees)
+        {
+            radians = (degrees * pi) / 180;
+            radians_array = radians;
+        }
     };
 
     Triangle Info;
@@ -397,63 +397,105 @@ int main() {
     }
     //Sine and cosine rule's can also be used for right angled triangle's but I see no reason to do that and so haven't programmed that functionality in, I will if I discover a use later down the line
     else if (Info.A != 90 && Info.B != 90 && Info.C != 90) {
-        //Calc. angle's when 2 side's & 1 angle known - trig (sine rule)
-        if (x == "A" && Info.a != 0 && Info.B != 0 && Info.b != 0) {
-            radianDegrees(ans, asin(Info.a * sin(Info.Br) / Info.b));
+        if (x == "A" || x == "B" || x == "C") {
+            //Calc. angle's when 1 angle & 2 side's known - trig (sine rule)
+            if (x == "A" && Info.a != 0 && Info.B != 0 && Info.b != 0) {
+                radianDegrees(ans, asin(Info.a * sin(Info.Br) / Info.b));
+            }
+            else if (x == "A" && Info.a != 0 && Info.C != 0 && Info.c != 0) {
+                radianDegrees(ans, asin(Info.a * sin(Info.Cr) / Info.c));
+            }
+            else if (x == "B" && Info.b != 0 && Info.A != 0 && Info.a != 0) {
+                radianDegrees(ans, asin(Info.b * sin(Info.Ar) / Info.a));
+            }
+            else if (x == "B" && Info.a != 0 && Info.B != 0 && Info.b != 0) {
+                radianDegrees(ans, asin(Info.b * sin(Info.Cr) / Info.c));
+            }
+            else if (x == "C" && Info.a != 0 && Info.B != 0 && Info.b != 0) {
+                radianDegrees(ans, asin(Info.c * sin(Info.Ar) / Info.a));
+            }
+            else if (x == "C" && Info.a != 0 && Info.B != 0 && Info.b != 0) {
+                radianDegrees(ans, asin(Info.c * sin(Info.Br) / Info.b));
+            }
+            //Calc. angle's when 3 side's known - trig (cosine rule)
+            if (Info.a != 0 && Info.b != 0 && Info.c != 0) {
+                if (x == "A") {
+                    radianDegrees(ans, acos((pow(Info.b, 2) + pow(Info.c, 2) - pow(Info.a, 2)) / (2 * Info.b * Info.c)));
+                }
+                /*else if (x == "A" && Info.a != 0 && Info.b != 0 && Info.c != 0) {
+                    radianDegrees(ans, acos((pow(Info.b, 2) + pow(Info.c, 2) - pow(Info.a, 2)) / (2 * Info.a * Info.c)));
+                }
+                else if (x == "A" && Info.a != 0 && Info.b != 0 && Info.c != 0) {
+                    radianDegrees(ans, acos((pow(Info.b, 2) + pow(Info.c, 2) - pow(Info.a, 2)) / (2 * Info.a * Info.b)));
+                }*/
+                else if (x == "B") {
+                    radianDegrees(ans, acos((pow(Info.a, 2) + pow(Info.c, 2) - pow(Info.b, 2)) / (2 * Info.a * Info.c)));
+                }
+                /*else if (x == "B" && Info.a != 0 && Info.b != 0 && Info.c != 0) {
+                    radianDegrees(ans, acos((pow(Info.a, 2) + pow(Info.c, 2) - pow(Info.b, 2)) / (2 * Info.b * Info.c)));
+                }
+                else if (x == "B" && Info.a != 0 && Info.b != 0 && Info.c != 0) {
+                    radianDegrees(ans, acos((pow(Info.a, 2) + pow(Info.c, 2) - pow(Info.b, 2)) / (2 * Info.a * Info.b)));
+                }*/
+                else if (x == "C") {
+                    radianDegrees(ans, acos((pow(Info.a, 2) + pow(Info.b, 2) - pow(Info.c, 2)) / (2 * Info.a * Info.b)));
+                }
+                /*else if (x == "C" && Info.a != 0 && Info.b != 0 && Info.c != 0) {
+                    radianDegrees(ans, acos((pow(Info.a, 2) + pow(Info.b, 2) - pow(Info.c, 2)) / (2 * Info.b * Info.c)));
+                }
+                else if (x == "C" && Info.a != 0 && Info.b != 0 && Info.c != 0) {
+                    radianDegrees(ans, acos((pow(Info.a, 2) + pow(Info.b, 2) - pow(Info.c, 2)) / (2 * Info.a * Info.c)));
+                }*/
+            }
         }
-        else if (x == "A" && Info.a != 0 && Info.C != 0 && Info.c != 0) {
-            radianDegrees(ans, asin(Info.a * sin(Info.Cr) / Info.c));
-        }
-        else if (x == "B" && Info.b != 0 && Info.A != 0 && Info.a != 0) {
-            radianDegrees(ans, asin(Info.b * sin(Info.Ar) / Info.a));
-        }
-        else if (x == "B" && Info.a != 0 && Info.B != 0 && Info.b != 0) {
-            radianDegrees(ans, asin(Info.b * sin(Info.Cr) / Info.c));
-        }
-        else if (x == "C" && Info.a != 0 && Info.B != 0 && Info.b != 0) {
-            radianDegrees(ans, asin(Info.c * sin(Info.Ar) / Info.a));
-        }
-        else if (x == "C" && Info.a != 0 && Info.B != 0 && Info.b != 0) {
-            radianDegrees(ans, asin(Info.c * sin(Info.Br) / Info.b));
-        }
-        //Calc. side's when 1 angle & 2 side's known - trig (sine rule)
-        else if (x == "a" && Info.A != 0 && Info.B != 0 && Info.b != 0) {
-            ans = sin(Info.Ar) * Info.b / sin(Info.Br);
-        }
-        else if (x == "a" && Info.A != 0 && Info.C != 0 && Info.c != 0) {
-            ans = sin(Info.Ar) * Info.b / sin(Info.Br);
-        }
-        else if (x == "b" && Info.B != 0 && Info.A != 0 && Info.a != 0) {
-            ans = sin(Info.Ar) * Info.b / sin(Info.Br);
-        }
-        else if (x == "b" && Info.B != 0 && Info.C != 0 && Info.c != 0) {
-            ans = sin(Info.Ar) * Info.b / sin(Info.Br);
-        }
-        else if (x == "c" && Info.C != 0 && Info.A != 0 && Info.a != 0) {
-            ans = sin(Info.Ar) * Info.b / sin(Info.Br);
-        }
-        else if (x == "c" && Info.C != 0 && Info.B != 0 && Info.b != 0) {
-            ans = sin(Info.Ar) * Info.b / sin(Info.Br);
-        }
-        //Calc. angle's when 1 angle and 2 side's known - trig (cosine rule)
-        else if (x == "A" && Info.a != 0 && Info.b != 0 && Info.c != 0) {
-            radianDegrees(ans, acos(((pow(Info.b, 2)) + (pow(Info.c, 2)) - (pow(Info.a, 2))) / 2 * Info.b * Info.c));
-        }
-        else if (x == "B" && Info.a != 0 && Info.b != 0 && Info.c != 0) {
-            radianDegrees(ans, acos(((pow(Info.a, 2)) + (pow(Info.c, 2)) - (pow(Info.b, 2))) / 2 * Info.a * Info.c));
-        }
-        else if (x == "C" && Info.a != 0 && Info.b != 0 && Info.c != 0) {
-            radianDegrees(ans, acos(((pow(Info.a, 2)) + (pow(Info.b, 2)) - (pow(Info.c, 2))) / 2 * Info.a * Info.b));
-        }
-        //Calc. side's when 1 angle and 2 side's known - trig (cosine rule)
-        else if (x == "a" && Info.A != 0 && Info.b != 0 && Info.c != 0) {
-            ans = sqrt((pow(Info.b, 2)) + (pow(Info.c, 2)) - (2 * Info.b * Info.c * cos(Info.Ar)));
-        }
-        else if (x == "b" && Info.B != 0 && Info.a != 0 && Info.c != 0) {
-            ans = sqrt((pow(Info.a, 2)) + (pow(Info.c, 2)) - (2 * Info.a * Info.c * cos(Info.Br)));
-        }
-        else if (x == "c" && Info.C != 0 && Info.a != 0 && Info.b != 0) {
-            ans = sqrt((pow(Info.a, 2)) + (pow(Info.b, 2)) - (2 * Info.a * Info.b * cos(Info.Cr)));
+        else if (x == "a" || x == "b" || x == "c") {
+            //Calc. side's when 2 angle's & 1 side known - trig (sine rule)
+            if (x == "a" && Info.A != 0 && Info.B != 0 && Info.b != 0) {
+                ans = sin(Info.Ar) * Info.b / sin(Info.Br);
+            }
+            else if (x == "a" && Info.A != 0 && Info.C != 0 && Info.c != 0) {
+                ans = sin(Info.Ar) * Info.c / sin(Info.Cr);
+            }
+            else if (x == "b" && Info.B != 0 && Info.A != 0 && Info.a != 0) {
+                ans = sin(Info.Br) * Info.a / sin(Info.Ar);
+            }
+            else if (x == "b" && Info.B != 0 && Info.C != 0 && Info.c != 0) {
+                ans = sin(Info.Br) * Info.c / sin(Info.Cr);
+            }
+            else if (x == "c" && Info.C != 0 && Info.A != 0 && Info.a != 0) {
+                ans = sin(Info.Cr) * Info.a / sin(Info.Ar);
+            }
+            else if (x == "c" && Info.C != 0 && Info.B != 0 && Info.b != 0) {
+                ans = sin(Info.Cr) * Info.b / sin(Info.Br);
+            }
+            //Calc. side's when 1 angle and 2 side's known - trig (cosine rule)
+            else if (x == "a" && Info.A != 0 && Info.b != 0 && Info.c != 0) {
+                ans = sqrt((pow(Info.b, 2)) + (pow(Info.c, 2)) - (2 * Info.b * Info.c * cos(Info.Ar)));
+            }
+            else if (x == "a" && Info.B != 0 && Info.b != 0 && Info.c != 0) {
+                ans = sqrt((pow(Info.b, 2)) - (pow(Info.c, 2)) + (2 * Info.b * Info.c * cos(Info.Br)));
+            }
+            else if (x == "a" && Info.C != 0 && Info.c != 0 && Info.b != 0) {
+                ans = sqrt((pow(Info.c, 2)) - (pow(Info.b, 2)) + (2 * Info.c * Info.b * cos(Info.Cr)));
+            }
+            else if (x == "b" && Info.B != 0 && Info.a != 0 && Info.c != 0) {
+                ans = sqrt((pow(Info.a, 2)) + (pow(Info.c, 2)) - (2 * Info.a * Info.c * cos(Info.Br)));
+            }
+            else if (x == "b" && Info.A != 0 && Info.a != 0 && Info.c != 0) {
+                ans = sqrt((pow(Info.b, 2)) - (pow(Info.c, 2)) + (2 * Info.a * Info.c * cos(Info.Ar)));
+            }
+            else if (x == "b" && Info.C != 0 && Info.c != 0 && Info.a != 0) {
+                ans = sqrt((pow(Info.c, 2)) - (pow(Info.a, 2)) + (2 * Info.c * Info.a * cos(Info.Cr)));
+            }
+            else if (x == "c" && Info.C != 0 && Info.a != 0 && Info.b != 0) {
+                ans = sqrt((pow(Info.a, 2)) + (pow(Info.b, 2)) - (2 * Info.a * Info.b * cos(Info.Cr)));
+            }
+            else if (x == "c" && Info.A != 0 && Info.a != 0 && Info.b != 0) {
+                ans = sqrt((pow(Info.a, 2)) - (pow(Info.b, 2)) + (2 * Info.a * Info.b * cos(Info.Ar)));
+            }
+            else if (x == "c" && Info.B != 0 && Info.b != 0 && Info.a != 0) {
+                ans = sqrt((pow(Info.b, 2)) - (pow(Info.a, 2)) + (2 * Info.b * Info.a * cos(Info.Br)));
+            }
         }
     }
     else {
