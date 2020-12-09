@@ -8,7 +8,7 @@ This program is in beta currently as all feature's are implemented (but more may
 
 ### Downloads:  
 Windows 32-bit - Download triangle-calculator-windows10-x86.exe  
-Windows 64-bit - Download triangle-calculator-windows10-x86.exe  
+Windows 64-bit - Download triangle-calculator-windows10-x64.exe  
 Linux 32-bit - Download triangle-calculator-linux-x86  
 Linux 64 bit - Download triangle-calculator-linux-x64  
 If you don't know what instruction set your computer used download the corresponding x86 file for your OS.
