@@ -1,6 +1,4 @@
 # triangle-calculator
-<<<<<<< HEAD
-
 Please read this file in full.
 
 This repository is for a C++ program that uses logic to find the best equation & calculate requested property of the triangle using it based off of known properties of the triangle. Designed to be as automated as possible.
@@ -28,6 +26,3 @@ Linux 64-bit - g++ -m64 triangle-calculator.cpp -o triangle-calculator-linux-x64
 ### Use:  
 When the program load's enter in any known value's for angle's or side's on the triangle as well the side or angle to be calculated. If it is possible based off of that information it will calculate the side or angle specified by working out the equation to use through basic logic and then entering value's into the formula.  
 Note - This program currently cannot calculate the value of a side or angle as needed to have the right information to calculate the requested side or angle, this is possible to implement but has not been done yet.
-=======
-This repository is the source code for a c++ program that automatically work's out which equation to use for triangle calculation's and then automatically calculate's the solution based only off known value's of the triangle and no other information, designed to be as automated as possible.
->>>>>>> parent of 62d5cc6... Merge pull request #1 from Kepler7894i/Kepler7894i-patch-1
