@@ -31,6 +31,7 @@ int main() {
         double A = 0, B = 0, C = 0;
         double Ar = 0, Br = 0, Cr = 0;
         double a = 0, b = 0, c = 0;
+        double area = 0;
 
         void degreesRadians(double& radians, double& radians_array, double& degrees)
         {
@@ -77,6 +78,9 @@ int main() {
     cin >> Info.c;
     inf_side[2] = Info.c;
 
+    cout << "\t" << "area = ";
+    cin >> Info.area;
+
     cout << "\n";
 
     cout << "Angle's: " << Info.A << ", " << Info.B << ", " << Info.C << "\n";
@@ -109,6 +113,53 @@ int main() {
     }
     else if (x == "C" && Info.B != 0 && Info.A != 0) {
         ans = 180 - Info.B - Info.A;
+    }
+    //Calculate area when 2 side's and inbetween angle known
+    else if (x == "area" && ((Info.a != 0 && Info.b != 0 && Info.C != 0) || (Info.b != 0 && Info.c != 0 && Info.A != 0) || (Info.c != 0 && Info.a != 0 && Info.B != 0))) {
+        if (Info.a != 0 && Info.b != 0 && Info.C != 0) {
+            ans = 0.5 * Info.a * Info.b * sin(Info.Cr);
+        }
+        else if (Info.b != 0 && Info.c != 0 && Info.A != 0) {
+            ans = 0.5 * Info.b * Info.c * sin(Info.Ar);
+        }
+        else if (Info.c != 0 && Info.a != 0 && Info.B != 0) {
+            ans = 0.5 * Info.c * Info.a * sin(Info.Br);
+        }
+    }
+    //Calculate side when area, a side and an angle is known
+    else if (x == "a" && Info.area != 0 && ((Info.b != 0 && Info.C != 0) || (Info.c != 0 && Info.B != 0))) {
+        if (Info.b != 0 && Info.C != 0) {
+            ans = Info.area / (0.5 * Info.b * sin(Info.Cr));
+        }
+        else if (Info.c != 0 && Info.B != 0) {
+            ans = Info.area / (0.5 * Info.c * sin(Info.Br));
+        }
+    }
+    else if (x == "b" && Info.area != 0 && ((Info.a != 0 && Info.C != 0) || (Info.c != 0 && Info.A != 0))) {
+        if (Info.a != 0 && Info.C != 0) {
+            ans = Info.area / (0.5 * Info.a * sin(Info.Cr));
+        }
+        else if (Info.c != 0 && Info.A != 0) {
+            ans = Info.area / (0.5 * Info.c * sin(Info.Ar));
+        }
+    }
+    else if (x == "c" && Info.area != 0 && ((Info.b != 0 && Info.A != 0) || (Info.a != 0 && Info.B != 0))) {
+        if (Info.b != 0 && Info.C != 0) {
+            ans = Info.area / (0.5 * Info.b * sin(Info.Ar));
+        }
+        else if (Info.c != 0 && Info.B != 0) {
+            ans = Info.area / (0.5 * Info.a * sin(Info.Br));
+        }
+    }
+    //Calculate angle when area and 2 side's are known
+    else if (x == "A" && Info.area != 0 && Info.b != 0 && Info.c != 0) {
+        ans = asin(Info.area / (0.5 * Info.b * Info.c));
+    }
+    else if (x == "B" && Info.area != 0 && Info.a != 0 && Info.c != 0) {
+        ans = asin(Info.area / (0.5 * Info.a * Info.c));
+    }
+    else if (x == "A" && Info.area != 0 && Info.a != 0 && Info.b != 0) {
+        ans = asin(Info.area / (0.5 * Info.a * Info.b));
     }
     else if (Info.A == 90 || Info.B == 90 || Info.C == 90) {
         //Calc. side's when 2 side's known - pyth
