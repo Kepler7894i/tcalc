@@ -12,16 +12,22 @@ void radianDegrees(double& ansReference, double calcOutput) {
 
 void error(int error, string x) {
     switch (error) {
-        case 1:
-            cout << "\n\n" << "Error: Invalid angle input" << "\n";
-            cout << "Please enter valid angle's (must add to 180 degree's)." << "\n\n";
-        case 2:
-            cout << "Error: " << x << " is incalculabe with information provided." << "\n\n";
+    case 1:
+        cout << "\n\n" << "Error: Invalid angle input" << "\n";
+        cout << "Please enter valid angle's (must add to 180 degree's)." << "\n\n";
+        break;
+    case 2:
+        cout << "Error: " << x << " is incalculabe with information provided." << "\n\n";
+
+    case 3:
+        cout << "Error: Two sides cannot be 0." << "\n\n";
+        break;
+
     }
 }
 
 int main() {
-    int i, inf_angles_present = 0, inf_sides_present = 0, inf_values_present = 0;
+    int i, inf_angles_present = 0, inf_sides_present = 0, inf_values_present = 0, count_sides = 0;
     double ans = 0, inf_angle[3], inf_radian[3], inf_side[3];
     string x;
 
@@ -60,7 +66,7 @@ int main() {
     Info.degreesRadians(Info.Cr, inf_radian[2], Info.C);
 
     //input check
-    if ((Info.A + Info.B + Info.C) > 180) {
+    if ((Info.A + Info.B + Info.C) != 180.00) {
         error(1, x);
         main();
         return 1;
@@ -77,6 +83,25 @@ int main() {
     cout << "\t" << "c = ";
     cin >> Info.c;
     inf_side[2] = Info.c;
+    
+    //sides input check
+    for (int i = 0; i < 3; i++)
+    {
+        if (inf_side[i] == 0)
+        {
+            count_sides++;
+        }
+        if (count_sides >= 2) {
+            error(3, x);
+            main();
+            return 1;
+        }
+    }
+
+    
+
+    
+    inf_side[2] = Info.c;
 
     cout << "\t" << "area = ";
     cin >> Info.area;
@@ -86,6 +111,9 @@ int main() {
     cout << "Angle's: " << Info.A << ", " << Info.B << ", " << Info.C << "\n";
     cout << "Radian's: " << Info.Ar << ", " << Info.Br << ", " << Info.Cr << "\n";
     cout << "Side's: " << Info.a << ", " << Info.b << ", " << Info.c << "\n";
+   
+   
+
 
     //error - inf_values_present always = 0
     for (i = 0; i < 3; i++) {
