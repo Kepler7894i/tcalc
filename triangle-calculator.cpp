@@ -12,16 +12,20 @@ void radianDegrees(double& ansReference, double calcOutput) {
 
 void error(int error, string x) {
     switch (error) {
-    case 1:
-        cout << "\n\n" << "Error: Invalid angle input" << "\n";
-        cout << "Please enter valid angle's (must add to 180 degree's)." << "\n\n";
-        break;
-    case 2:
-        cout << "Error: " << x << " is incalculabe with information provided." << "\n\n";
-
-    case 3:
-        cout << "Error: Two sides cannot be 0." << "\n\n";
-        break;
+        case 1:
+            cout << "\n\n" << "Error: Invalid angle input" << "\n";
+            cout << "Please enter valid angle's, angles !> 180 degree." << "\n\n";
+            break;
+        case 2:
+            cout << "Error: " << x << " is incalculabe with information provided." << "\n\n";
+            break; //should this be included?
+        case 3:
+            cout << "Error: Two sides cannot be 0." << "\n\n";
+            break;
+        case 4:
+            cout << "One or more inputted values is incorrect compared to other values" << "\n\n";
+            userInput(); //in development branch input has been seperated from calculations and so this will only be added when development changes pushed
+            break;
 
     }
 }
@@ -66,7 +70,7 @@ int main() {
     Info.degreesRadians(Info.Cr, inf_radian[2], Info.C);
 
     //input check
-    if ((Info.A + Info.B + Info.C) != 180.00) {
+    if ((Info.A + Info.B + Info.C) > 180.00) {
         error(1, x);
         main();
         return 1;
@@ -82,25 +86,11 @@ int main() {
 
     cout << "\t" << "c = ";
     cin >> Info.c;
-    inf_side[2] = Info.c;
-    
-    //sides input check
-    for (int i = 0; i < 3; i++)
-    {
-        if (inf_side[i] == 0)
-        {
-            count_sides++;
-        }
-        if (count_sides >= 2) {
-            error(3, x);
-            main();
-            return 1;
-        }
-    }
+    inf_side[2] = Info.c;  
 
-    
 
-    
+
+
     inf_side[2] = Info.c;
 
     cout << "\t" << "area = ";
@@ -111,11 +101,16 @@ int main() {
     cout << "Angle's: " << Info.A << ", " << Info.B << ", " << Info.C << "\n";
     cout << "Radian's: " << Info.Ar << ", " << Info.Br << ", " << Info.Cr << "\n";
     cout << "Side's: " << Info.a << ", " << Info.b << ", " << Info.c << "\n";
-   
-   
 
 
-    //error - inf_values_present always = 0
+
+    //sides input check
+    for (int i = 0; i < 3; i++) {
+        if (inf_side[i] == 0) {
+            count_sides++;
+        }
+    }
+    
     for (i = 0; i < 3; i++) {
         if (inf_angle[i] != 0) {
             ++inf_angles_present;
@@ -131,6 +126,11 @@ int main() {
     cout << "What would you like to calculate (capital=angle, lowercase=side): ";
     cin >> x;
     cout << "\n";
+    
+
+
+
+
 
     //Calc. angle's when 2 angle's known - 180 degree's in tirangle
     if (x == "A" && Info.B != 0 && Info.C != 0) {
@@ -189,7 +189,7 @@ int main() {
     else if (x == "A" && Info.area != 0 && Info.a != 0 && Info.b != 0) {
         ans = asin(Info.area / (0.5 * Info.a * Info.b));
     }
-    else if (Info.A == 90 || Info.B == 90 || Info.C == 90) {
+    else if ((Info.A == 90 || Info.B == 90 || Info.C == 90) && count_sides < 2) {
         //Calc. side's when 2 side's known - pyth
         if ((x == "a" || x == "b" || x == "c") && inf_sides_present == 2) {
             if (Info.A == 90) {
