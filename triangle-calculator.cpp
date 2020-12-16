@@ -25,11 +25,11 @@ public:
     double Area = 0;
 };
 
-void degreesRadians(double& radians, double& degrees) {
+void degrees_radians(double& degrees, double& radians) {
     radians = (degrees * pi) / 180;
 }
 
-void radianDegrees(double& degrees, double radians) {
+void radians_degrees(double radians, double& degrees) {
     degrees = (radians * 180) / pi;
 }
 
@@ -120,6 +120,7 @@ void calculations(Triangle& Info, int angle_count, int side_count) {
                     ans = sqrt(pow(Info.a, 2) - pow(Info.c, 2));
                 }
                 else if (x == "c" && Info.a != 0 && Info.b != 0) {
+                    std::cout << "hi";
                     ans = sqrt(pow(Info.a, 2) - pow(Info.b, 2));
                 }
             }
@@ -323,72 +324,72 @@ void calculations(Triangle& Info, int angle_count, int side_count) {
             if (Info.A == 90) {
                 if (x == "B") {
                     if (Info.a != 0 && Info.b != 0) {
-                        radianDegrees(ans, asin(Info.b / Info.a));
+                        radians_degrees(asin(Info.b / Info.a), ans);
                     }
                     else if (Info.a != 0 && Info.c != 0) {
-                        radianDegrees(ans, acos(Info.c / Info.a));
+                        radians_degrees(acos(Info.c / Info.a), ans);
                     }
                     else if (Info.b != 0 && Info.c != 0) {
-                        radianDegrees(ans, atan(Info.b / Info.c));
+                        radians_degrees(atan(Info.b / Info.c), ans);
                     }
                 }
                 else if (x == "C") {
                     if (Info.a != 0 && Info.c != 0) {
-                        radianDegrees(ans, asin(Info.c / Info.a));
+                        radians_degrees(asin(Info.c / Info.a), ans);
                     }
                     else if (Info.a != 0 && Info.b != 0) {
-                        radianDegrees(ans, acos(Info.b / Info.a));
+                        radians_degrees(acos(Info.b / Info.a), ans);
                     }
                     else if (Info.b != 0 && Info.c != 0) {
-                        radianDegrees(ans, atan(Info.c / Info.b));
+                        radians_degrees(atan(Info.c / Info.b), ans);
                     }
                 }
             }
             else if (Info.B == 90) {
                 if (x == "A") {
                     if (Info.a != 0 && Info.b != 0) {
-                        radianDegrees(ans, asin(Info.a / Info.b));
+                        radians_degrees(asin(Info.a / Info.b), ans);
                     }
                     else if (Info.a != 0 && Info.c != 0) {
-                        radianDegrees(ans, acos(Info.c / Info.a));
+                        radians_degrees(acos(Info.c / Info.a), ans);
                     }
                     else if (Info.b != 0 && Info.c != 0) {
-                        radianDegrees(ans, atan(Info.b / Info.c));
+                        radians_degrees(atan(Info.b / Info.c), ans);
                     }
                 }
                 else if (x == "C") {
                     if (Info.c != 0 && Info.b != 0) {
-                        radianDegrees(ans, asin(Info.c / Info.b));
+                        radians_degrees(asin(Info.c / Info.b), ans);
                     }
                     else if (Info.a != 0 && Info.b != 0) {
-                        radianDegrees(ans, acos(Info.b / Info.a));
+                        radians_degrees(acos(Info.b / Info.a), ans);
                     }
                     else if (Info.b != 0 && Info.c != 0) {
-                        radianDegrees(ans, atan(Info.c / Info.b));
+                        radians_degrees(atan(Info.c / Info.b), ans);
                     }
                 }
             }
             else if (Info.C == 90) {
                 if (x == "A") {
                     if (Info.a != 0 && Info.c != 0) {
-                        radianDegrees(ans, asin(Info.a / Info.c));
+                        radians_degrees(asin(Info.a / Info.c), ans);
                     }
                     else if (Info.b != 0 && Info.c != 0) {
-                        radianDegrees(ans, acos(Info.b / Info.c));
+                        radians_degrees(acos(Info.b / Info.c), ans);
                     }
                     else if (Info.a != 0 && Info.b != 0) {
-                        radianDegrees(ans, atan(Info.a / Info.b));
+                        radians_degrees(atan(Info.a / Info.b), ans);
                     }
                 }
                 else if (x == "B") {
                     if (Info.b != 0 && Info.c != 0) {
-                        radianDegrees(ans, asin(Info.b / Info.c));
+                        radians_degrees(asin(Info.b / Info.c), ans);
                     }
                     else if (Info.a != 0 && Info.c != 0) {
-                        radianDegrees(ans, acos(Info.a / Info.c));
+                        radians_degrees(acos(Info.a / Info.c), ans);
                     }
                     else if (Info.a != 0 && Info.b != 0) {
-                        radianDegrees(ans, atan(Info.b / Info.a));
+                        radians_degrees(atan(Info.b / Info.a), ans);
                     }
                 }
             }
@@ -399,51 +400,51 @@ void calculations(Triangle& Info, int angle_count, int side_count) {
         if (x == "A" || x == "B" || x == "C") {
             //Calc. angle's when 1 angle & 2 side's known - trig (sine rule)
             if (x == "A" && Info.a != 0 && Info.B != 0 && Info.b != 0) {
-                radianDegrees(ans, asin(Info.a * sin(Info.Br) / Info.b));
+                radians_degrees(asin(Info.a * sin(Info.Br) / Info.b), ans);
             }
             else if (x == "A" && Info.a != 0 && Info.C != 0 && Info.c != 0) {
-                radianDegrees(ans, asin(Info.a * sin(Info.Cr) / Info.c));
+                radians_degrees(asin(Info.a * sin(Info.Cr) / Info.c), ans);
             }
             else if (x == "B" && Info.b != 0 && Info.A != 0 && Info.a != 0) {
-                radianDegrees(ans, asin(Info.b * sin(Info.Ar) / Info.a));
+                radians_degrees(asin(Info.b * sin(Info.Ar) / Info.a), ans);
             }
             else if (x == "B" && Info.a != 0 && Info.B != 0 && Info.b != 0) {
-                radianDegrees(ans, asin(Info.b * sin(Info.Cr) / Info.c));
+                radians_degrees(asin(Info.b * sin(Info.Cr) / Info.c), ans);
             }
             else if (x == "C" && Info.a != 0 && Info.B != 0 && Info.b != 0) {
-                radianDegrees(ans, asin(Info.c * sin(Info.Ar) / Info.a));
+                radians_degrees(asin(Info.c * sin(Info.Ar) / Info.a), ans);
             }
             else if (x == "C" && Info.a != 0 && Info.B != 0 && Info.b != 0) {
-                radianDegrees(ans, asin(Info.c * sin(Info.Br) / Info.b));
+                radians_degrees(asin(Info.c * sin(Info.Br) / Info.b), ans);
             }
             //Calc. angle's when 3 side's known - trig (cosine rule)
             if (Info.a != 0 && Info.b != 0 && Info.c != 0) {
                 if (x == "A") {
-                    radianDegrees(ans, acos((pow(Info.b, 2) + pow(Info.c, 2) - pow(Info.a, 2)) / (2 * Info.b * Info.c)));
+                    radians_degrees(acos((pow(Info.b, 2) + pow(Info.c, 2) - pow(Info.a, 2)) / (2 * Info.b * Info.c)), ans);
                 }
                 /*else if (x == "A" && Info.a != 0 && Info.b != 0 && Info.c != 0) {
-                    radianDegrees(ans, acos((pow(Info.b, 2) + pow(Info.c, 2) - pow(Info.a, 2)) / (2 * Info.a * Info.c)));
+                    radians_degrees(ans, acos((pow(Info.b, 2) + pow(Info.c, 2) - pow(Info.a, 2)) / (2 * Info.a * Info.c)));
                 }
                 else if (x == "A" && Info.a != 0 && Info.b != 0 && Info.c != 0) {
-                    radianDegrees(ans, acos((pow(Info.b, 2) + pow(Info.c, 2) - pow(Info.a, 2)) / (2 * Info.a * Info.b)));
+                    radians_degrees(ans, acos((pow(Info.b, 2) + pow(Info.c, 2) - pow(Info.a, 2)) / (2 * Info.a * Info.b)));
                 }*/
                 else if (x == "B") {
-                    radianDegrees(ans, acos((pow(Info.a, 2) + pow(Info.c, 2) - pow(Info.b, 2)) / (2 * Info.a * Info.c)));
+                    radians_degrees(acos((pow(Info.a, 2) + pow(Info.c, 2) - pow(Info.b, 2)) / (2 * Info.a * Info.c)), ans);
                 }
                 /*else if (x == "B" && Info.a != 0 && Info.b != 0 && Info.c != 0) {
-                    radianDegrees(ans, acos((pow(Info.a, 2) + pow(Info.c, 2) - pow(Info.b, 2)) / (2 * Info.b * Info.c)));
+                    radians_degrees(ans, acos((pow(Info.a, 2) + pow(Info.c, 2) - pow(Info.b, 2)) / (2 * Info.b * Info.c)));
                 }
                 else if (x == "B" && Info.a != 0 && Info.b != 0 && Info.c != 0) {
-                    radianDegrees(ans, acos((pow(Info.a, 2) + pow(Info.c, 2) - pow(Info.b, 2)) / (2 * Info.a * Info.b)));
+                    radians_degrees(ans, acos((pow(Info.a, 2) + pow(Info.c, 2) - pow(Info.b, 2)) / (2 * Info.a * Info.b)));
                 }*/
                 else if (x == "C") {
-                    radianDegrees(ans, acos((pow(Info.a, 2) + pow(Info.b, 2) - pow(Info.c, 2)) / (2 * Info.a * Info.b)));
+                    radians_degrees(acos((pow(Info.a, 2) + pow(Info.b, 2) - pow(Info.c, 2)) / (2 * Info.a * Info.b)), ans);
                 }
                 /*else if (x == "C" && Info.a != 0 && Info.b != 0 && Info.c != 0) {
-                    radianDegrees(ans, acos((pow(Info.a, 2) + pow(Info.b, 2) - pow(Info.c, 2)) / (2 * Info.b * Info.c)));
+                    radians_degrees(ans, acos((pow(Info.a, 2) + pow(Info.b, 2) - pow(Info.c, 2)) / (2 * Info.b * Info.c)));
                 }
                 else if (x == "C" && Info.a != 0 && Info.b != 0 && Info.c != 0) {
-                    radianDegrees(ans, acos((pow(Info.a, 2) + pow(Info.b, 2) - pow(Info.c, 2)) / (2 * Info.a * Info.c)));
+                    radians_degrees(ans, acos((pow(Info.a, 2) + pow(Info.b, 2) - pow(Info.c, 2)) / (2 * Info.a * Info.c)));
                 }*/
             }
         }
@@ -512,26 +513,26 @@ void userInput() {
     std::cin >> x;
     std::cout << "\n";
 
-    if (x != "A" || "B" || "C" || "a" || "b" || "c" || "Area" || "area") {
+    if (x != "A" && x != "B" && x != "C" && x != "a" && x != "b" && x != "c" && x != "Area" && x != "area") {
         std::cout << "\nPlease enter a valid property.";
         userInput();
     }
     if (x != "A") {
         std::cout << "\tA = ";
         std::cin >> Info.A;
-        degreesRadians(Info.Ar, Info.A);
+        degrees_radians(Info.Ar, Info.A);
     }
     if (x != "B") {
         std::cout << "\tB = ";
         std::cin >> Info.B;
         inf_angle[1] = Info.B;
-        degreesRadians(Info.Br, Info.B);
+        degrees_radians(Info.Br, Info.B);
     }
     if (x != "B") {
         std::cout << "\tC = ";
         std::cin >> Info.C;
         inf_angle[2] = Info.C;
-        degreesRadians(Info.Cr, Info.C);
+        degrees_radians(Info.Cr, Info.C);
     }
 
     if (Info.A != 0) {
@@ -583,7 +584,7 @@ void userInput() {
         ++side_count;
     }
 
-    if (x != "Area" || "area") {
+    if (x != "Area" && "area") {
         std::cout << "\tArea = ";
         std::cin >> Info.Area;
     }
