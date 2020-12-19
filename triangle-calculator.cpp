@@ -11,8 +11,8 @@ void fileInput(std::string file);
 const double pi = 3.14159;
 bool debug = false, right_angled = false;
 
-int i, angle_count = 0, side_count = 0;
-double ans = 0, inf_angle[3], inf_side[3];
+int angle_count = 0, side_count = 0;
+double ans = 0;
 
 std::string x;
 char** param_remove;
@@ -520,19 +520,17 @@ void userInput() {
     if (x != "A") {
         std::cout << "\tA = ";
         std::cin >> Info.A;
-        degrees_radians(Info.Ar, Info.A);
+        degrees_radians(Info.A, Info.Ar);
     }
     if (x != "B") {
         std::cout << "\tB = ";
         std::cin >> Info.B;
-        inf_angle[1] = Info.B;
-        degrees_radians(Info.Br, Info.B);
+        degrees_radians(Info.B, Info.Br);
     }
     if (x != "B") {
         std::cout << "\tC = ";
         std::cin >> Info.C;
-        inf_angle[2] = Info.C;
-        degrees_radians(Info.Cr, Info.C);
+        degrees_radians(Info.C, Info.Cr);
     }
 
     if (Info.A != 0) {
@@ -560,18 +558,15 @@ void userInput() {
     if (x != "a") {
         std::cout << "\ta = ";
         std::cin >> Info.a;
-        inf_side[0] = Info.a;
     }
     if (x != "b") {
         std::cout << "\tb = ";
         std::cin >> Info.b;
-        inf_side[1] = Info.b;
     }
     if (x != "c") {
 
         std::cout << "\tc = ";
         std::cin >> Info.c;
-        inf_side[2] = Info.c;
     }
 
     if (Info.a != 0) {
@@ -598,6 +593,7 @@ void userInput() {
         std::cout << "Area: " << Info.Area << "\n";
     }
 
+    //calculations(angle_count, side_count);
     calculations(Info, angle_count, side_count);
 }
 
