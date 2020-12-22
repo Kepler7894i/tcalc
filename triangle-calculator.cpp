@@ -666,8 +666,6 @@ void userInput() {
 void fileInput(std::string file) {
     Triangle Info;
 
-    debug = true;
-
     if (std::ifstream input_file{ file }) {
 
         std::string line, x;
@@ -877,13 +875,12 @@ int main(int argc, char** argv) {
     }*/
 
     #ifdef _WIN32
-    //userInput();
+    userInput();
 
     //std::string input_file;
     //std::cout << "File to read from: ";
     //std::cin >> input_file;
     //fileInput(input_file);
-    fileInput("file.txt");
     #else
     switch (getopt(argc, argv, "hfd:")) {
         case 'h':
