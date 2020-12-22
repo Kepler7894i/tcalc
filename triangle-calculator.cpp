@@ -1,17 +1,25 @@
-#include <iostream>
-#include <math.h>
-#include <cmath>
-#include <cstdlib>
+//Put angle_count and side_count and expected_ans and x in triangle and just pass that
+//Compare expected_ans to ans and log difference
 
-void main();
+#include <iostream>
+#include <fstream>
+#include <string>
+
+#ifndef _WIN32
+#include <unistd.h>
+#endif
+
+int main(int argc, char** argv);
+void userInput();
+void fileInput(std::string file);
 
 const double pi = 3.14159;
-int i, inf_angles_present = 0, inf_sides_present = 0, inf_values_present = 0;
-double ans = 0, inf_angle[3], inf_radian[3], inf_side[3];
-std::string x;
+bool debug = false, right_angled = false, testing = false, file = false;
 
-class Triangle
-{
+
+char** param_remove;
+
+class Triangle {
 public:
     double A = 0, B = 0, C = 0;
     double Ar = 0, Br = 0, Cr = 0;
@@ -19,27 +27,95 @@ public:
     double Area = 0;
 };
 
-void degreesRadians(double& radians, double& radians_array, double& degrees)
-{
+void degrees_radians(double& degrees, double& radians) {
     radians = (degrees * pi) / 180;
-    radians_array = radians;
 }
 
-void radianDegrees(double& ansReference, double calcOutput) {
-    ansReference = (calcOutput * 180) / pi;
+void radians_degrees(double radians, double& degrees) {
+    degrees = (radians * 180) / pi;
 }
 
-void error(int error, std::string x) {
-    switch (error) {
-        case 1:
-            std::cout << "\n\n" << "Error: Invalid angle input" << "\n";
-            std::cout << "Please enter valid angle's (must add to 180 degree's)." << "\n\n";
-        case 2:
-            std::cout << "Error: " << x << " is incalculabe with information provided." << "\n\n";
+void error(int error_num, std::string action) {
+    switch (error_num) {
+        case 1: {
+            std::cout << "\n\nError: Angles !<= 180 degree.\n\n";
+        }
+        case 2: {
+            std::cout << "Error: " << action << " is incalculabe with information provided.\n\n";
+            break;
+        }
+        case 3: {
+            std::cout << "Error: Two sides cannot be 0.\n\n";
+            break;
+        }
+        case 4: {
+            std::cout << "One or more inputted values is incorrect compared to other values.\n\n";
+            userInput();
+            break;
+        }
+        case 5: {
+            std::cout << "Error: Failed to open - " << action << "\nFile to read from: ";
+            std::string file;
+            std::cin >> file;
+            fileInput(file);
+            break;
+        }
+        case 6: {
+            int fixed;
+
+            std::cout << "\nError: Incorrect angles in file.";
+            std::cout << "\nFixed? ";
+            std::cin >> fixed;
+
+            if (fixed == 1) {
+                fileInput(action);
+            }
+            else if (fixed == 0) {
+                return;
+            }
+            else {
+                std::cout << "Enter 1 or 0.";
+                error(6, action);
+            }
+
+            break;
+        }
+        case 7: {
+            int fixed;
+
+            std::cout << "\nError: Incorrect number of properties in file. Fixed? ";
+            std::cout << "\n\n       Correct layout:";
+            std::cout << "\n         wanted_property A B C a b c Area expected_ans - Spaces between the values";
+            std::cout << "\n                                                       - Capital letters are angles, lowercase letters are sides";
+            std::cout << "\n                                                       - Opposite angles and sides should be the same letter";
+            std::cout << "Fixed? ";
+            std::cin >> fixed;
+
+            if (fixed == 1) {
+                fileInput(action);
+            }
+            else if (fixed == 0) {
+                return;
+            }
+            else {
+                std::cout << "Enter 1 or 0.";
+                error(6, action);
+            }
+        }
     }
 }
 
-int calculations(Triangle& Info) {
+void calculations(Triangle& Info, int angle_count, int side_count, std::string x) {
+    double ans = 0;
+
+    if (debug) {
+        std::cout << "\n\nWanted prop: " << x;
+        std::cout << "\nAngle's: " << Info.A << ", " << Info.B << ", " << Info.C;
+        std::cout << "\nRadian's: " << Info.Ar << ", " << Info.Br << ", " << Info.Cr;
+        std::cout << "\nSide's: " << Info.a << ", " << Info.b << ", " << Info.c;
+        std::cout << "\nArea: " << Info.Area;
+    }
+
     //Calc. angle's when 2 angle's known - 180 degree's in tirangle
     if (x == "A" && Info.B != 0 && Info.C != 0) {
         ans = 180 - Info.B - Info.C;
@@ -51,7 +127,7 @@ int calculations(Triangle& Info) {
         ans = 180 - Info.B - Info.A;
     }
     //Calculate area when 2 side's and inbetween angle known
-    else if ((x == "Area" || x == "area") && ((Info.a != 0 && Info.b != 0 && Info.C != 0) || (Info.b != 0 && Info.c != 0 && Info.A != 0) || (Info.c != 0 && Info.a != 0 && Info.B != 0))) {
+    else if ((x == "Area" || "area") && ((Info.a != 0 && Info.b != 0 && Info.C != 0) || (Info.b != 0 && Info.c != 0 && Info.A != 0) || (Info.c != 0 && Info.a != 0 && Info.B != 0))) {
         if (Info.a != 0 && Info.b != 0 && Info.C != 0) {
             ans = 0.5 * Info.a * Info.b * sin(Info.Cr);
         }
@@ -97,9 +173,9 @@ int calculations(Triangle& Info) {
     else if (x == "A" && Info.Area != 0 && Info.a != 0 && Info.b != 0) {
         ans = asin(Info.Area / (0.5 * Info.a * Info.b));
     }
-    else if (Info.A == 90 || Info.B == 90 || Info.C == 90) {
+    else if (90 == Info.A || Info.B || Info.C && x == "a" || "b" || "c" && side_count == 2) {
         //Calc. side's when 2 side's known - pyth
-        if ((x == "a" || x == "b" || x == "c") && inf_sides_present == 2) {
+        if (x == "a" || x == "b" || x == "c" && side_count == 2) {
             if (Info.A == 90) {
                 if (x == "a" && Info.b != 0 && Info.c != 0) {
                     ans = sqrt(pow(Info.b, 2) + pow(Info.c, 2));
@@ -108,6 +184,7 @@ int calculations(Triangle& Info) {
                     ans = sqrt(pow(Info.a, 2) - pow(Info.c, 2));
                 }
                 else if (x == "c" && Info.a != 0 && Info.b != 0) {
+                    std::cout << "hi";
                     ans = sqrt(pow(Info.a, 2) - pow(Info.b, 2));
                 }
             }
@@ -135,7 +212,7 @@ int calculations(Triangle& Info) {
             }
         }
         //Calc. side's when 1 side and 1 >= angle known (1 must be 90) - trig (functions)
-        else if ((x == "a" || x == "b" || x == "c") && inf_angles_present >= 1 && inf_sides_present == 1) {
+        else if (x == "a" || x == "b" || x == "c" && angle_count >= 1 && side_count == 1) {
             if (Info.A == 90) {
                 if (x == "a") {
                     if (Info.B != 0) {
@@ -306,77 +383,77 @@ int calculations(Triangle& Info) {
             }
         }
         //Calc. angle's when 2 sides known and 90 angle known - trig (functions)
-        else if ((Info.A == 90 || Info.B == 90 || Info.C == 90) && inf_sides_present == 2) {
+        else if (90 == Info.A || Info.B || Info.C && side_count == 2) {
             //Hyp = opp of 90 degree angle, Opp = opp of angle to be calculated, Adj = other side
             if (Info.A == 90) {
                 if (x == "B") {
                     if (Info.a != 0 && Info.b != 0) {
-                        radianDegrees(ans, asin(Info.b / Info.a));
+                        radians_degrees(asin(Info.b / Info.a), ans);
                     }
                     else if (Info.a != 0 && Info.c != 0) {
-                        radianDegrees(ans, acos(Info.c / Info.a));
+                        radians_degrees(acos(Info.c / Info.a), ans);
                     }
                     else if (Info.b != 0 && Info.c != 0) {
-                        radianDegrees(ans, atan(Info.b / Info.c));
+                        radians_degrees(atan(Info.b / Info.c), ans);
                     }
                 }
                 else if (x == "C") {
                     if (Info.a != 0 && Info.c != 0) {
-                        radianDegrees(ans, asin(Info.c / Info.a));
+                        radians_degrees(asin(Info.c / Info.a), ans);
                     }
                     else if (Info.a != 0 && Info.b != 0) {
-                        radianDegrees(ans, acos(Info.b / Info.a));
+                        radians_degrees(acos(Info.b / Info.a), ans);
                     }
                     else if (Info.b != 0 && Info.c != 0) {
-                        radianDegrees(ans, atan(Info.c / Info.b));
+                        radians_degrees(atan(Info.c / Info.b), ans);
                     }
                 }
             }
             else if (Info.B == 90) {
                 if (x == "A") {
                     if (Info.a != 0 && Info.b != 0) {
-                        radianDegrees(ans, asin(Info.a / Info.b));
+                        radians_degrees(asin(Info.a / Info.b), ans);
                     }
                     else if (Info.a != 0 && Info.c != 0) {
-                        radianDegrees(ans, acos(Info.c / Info.a));
+                        radians_degrees(acos(Info.c / Info.a), ans);
                     }
                     else if (Info.b != 0 && Info.c != 0) {
-                        radianDegrees(ans, atan(Info.b / Info.c));
+                        radians_degrees(atan(Info.b / Info.c), ans);
                     }
                 }
                 else if (x == "C") {
                     if (Info.c != 0 && Info.b != 0) {
-                        radianDegrees(ans, asin(Info.c / Info.b));
+                        radians_degrees(asin(Info.c / Info.b), ans);
                     }
                     else if (Info.a != 0 && Info.b != 0) {
-                        radianDegrees(ans, acos(Info.b / Info.a));
+                        radians_degrees(acos(Info.b / Info.a), ans);
                     }
                     else if (Info.b != 0 && Info.c != 0) {
-                        radianDegrees(ans, atan(Info.c / Info.b));
+                        radians_degrees(atan(Info.c / Info.b), ans);
                     }
                 }
             }
             else if (Info.C == 90) {
                 if (x == "A") {
                     if (Info.a != 0 && Info.c != 0) {
-                        radianDegrees(ans, asin(Info.a / Info.c));
+                        radians_degrees(asin(Info.a / Info.c), ans);
                     }
                     else if (Info.b != 0 && Info.c != 0) {
-                        radianDegrees(ans, acos(Info.b / Info.c));
+                        radians_degrees(acos(Info.b / Info.c), ans);
                     }
                     else if (Info.a != 0 && Info.b != 0) {
-                        radianDegrees(ans, atan(Info.a / Info.b));
+                        radians_degrees(atan(Info.a / Info.b), ans);
                     }
                 }
                 else if (x == "B") {
                     if (Info.b != 0 && Info.c != 0) {
-                        radianDegrees(ans, asin(Info.b / Info.c));
+                        radians_degrees(asin(Info.b / Info.c), ans);
                     }
                     else if (Info.a != 0 && Info.c != 0) {
-                        radianDegrees(ans, acos(Info.a / Info.c));
+                        radians_degrees(acos(Info.a / Info.c), ans);
                     }
                     else if (Info.a != 0 && Info.b != 0) {
-                        radianDegrees(ans, atan(Info.b / Info.a));
+                        radians_degrees(atan(Info.b / Info.a), ans);
                     }
                 }
             }
@@ -387,55 +464,55 @@ int calculations(Triangle& Info) {
         if (x == "A" || x == "B" || x == "C") {
             //Calc. angle's when 1 angle & 2 side's known - trig (sine rule)
             if (x == "A" && Info.a != 0 && Info.B != 0 && Info.b != 0) {
-                radianDegrees(ans, asin(Info.a * sin(Info.Br) / Info.b));
+                radians_degrees(asin(Info.a * sin(Info.Br) / Info.b), ans);
             }
             else if (x == "A" && Info.a != 0 && Info.C != 0 && Info.c != 0) {
-                radianDegrees(ans, asin(Info.a * sin(Info.Cr) / Info.c));
+                radians_degrees(asin(Info.a * sin(Info.Cr) / Info.c), ans);
             }
             else if (x == "B" && Info.b != 0 && Info.A != 0 && Info.a != 0) {
-                radianDegrees(ans, asin(Info.b * sin(Info.Ar) / Info.a));
+                radians_degrees(asin(Info.b * sin(Info.Ar) / Info.a), ans);
             }
             else if (x == "B" && Info.a != 0 && Info.B != 0 && Info.b != 0) {
-                radianDegrees(ans, asin(Info.b * sin(Info.Cr) / Info.c));
+                radians_degrees(asin(Info.b * sin(Info.Cr) / Info.c), ans);
             }
             else if (x == "C" && Info.a != 0 && Info.B != 0 && Info.b != 0) {
-                radianDegrees(ans, asin(Info.c * sin(Info.Ar) / Info.a));
+                radians_degrees(asin(Info.c * sin(Info.Ar) / Info.a), ans);
             }
             else if (x == "C" && Info.a != 0 && Info.B != 0 && Info.b != 0) {
-                radianDegrees(ans, asin(Info.c * sin(Info.Br) / Info.b));
+                radians_degrees(asin(Info.c * sin(Info.Br) / Info.b), ans);
             }
             //Calc. angle's when 3 side's known - trig (cosine rule)
             if (Info.a != 0 && Info.b != 0 && Info.c != 0) {
                 if (x == "A") {
-                    radianDegrees(ans, acos((pow(Info.b, 2) + pow(Info.c, 2) - pow(Info.a, 2)) / (2 * Info.b * Info.c)));
+                    radians_degrees(acos((pow(Info.b, 2) + pow(Info.c, 2) - pow(Info.a, 2)) / (2 * Info.b * Info.c)), ans);
                 }
                 /*else if (x == "A" && Info.a != 0 && Info.b != 0 && Info.c != 0) {
-                    radianDegrees(ans, acos((pow(Info.b, 2) + pow(Info.c, 2) - pow(Info.a, 2)) / (2 * Info.a * Info.c)));
+                    radians_degrees(ans, acos((pow(Info.b, 2) + pow(Info.c, 2) - pow(Info.a, 2)) / (2 * Info.a * Info.c)));
                 }
                 else if (x == "A" && Info.a != 0 && Info.b != 0 && Info.c != 0) {
-                    radianDegrees(ans, acos((pow(Info.b, 2) + pow(Info.c, 2) - pow(Info.a, 2)) / (2 * Info.a * Info.b)));
+                    radians_degrees(ans, acos((pow(Info.b, 2) + pow(Info.c, 2) - pow(Info.a, 2)) / (2 * Info.a * Info.b)));
                 }*/
                 else if (x == "B") {
-                    radianDegrees(ans, acos((pow(Info.a, 2) + pow(Info.c, 2) - pow(Info.b, 2)) / (2 * Info.a * Info.c)));
+                    radians_degrees(acos((pow(Info.a, 2) + pow(Info.c, 2) - pow(Info.b, 2)) / (2 * Info.a * Info.c)), ans);
                 }
                 /*else if (x == "B" && Info.a != 0 && Info.b != 0 && Info.c != 0) {
-                    radianDegrees(ans, acos((pow(Info.a, 2) + pow(Info.c, 2) - pow(Info.b, 2)) / (2 * Info.b * Info.c)));
+                    radians_degrees(ans, acos((pow(Info.a, 2) + pow(Info.c, 2) - pow(Info.b, 2)) / (2 * Info.b * Info.c)));
                 }
                 else if (x == "B" && Info.a != 0 && Info.b != 0 && Info.c != 0) {
-                    radianDegrees(ans, acos((pow(Info.a, 2) + pow(Info.c, 2) - pow(Info.b, 2)) / (2 * Info.a * Info.b)));
+                    radians_degrees(ans, acos((pow(Info.a, 2) + pow(Info.c, 2) - pow(Info.b, 2)) / (2 * Info.a * Info.b)));
                 }*/
                 else if (x == "C") {
-                    radianDegrees(ans, acos((pow(Info.a, 2) + pow(Info.b, 2) - pow(Info.c, 2)) / (2 * Info.a * Info.b)));
+                    radians_degrees(acos((pow(Info.a, 2) + pow(Info.b, 2) - pow(Info.c, 2)) / (2 * Info.a * Info.b)), ans);
                 }
                 /*else if (x == "C" && Info.a != 0 && Info.b != 0 && Info.c != 0) {
-                    radianDegrees(ans, acos((pow(Info.a, 2) + pow(Info.b, 2) - pow(Info.c, 2)) / (2 * Info.b * Info.c)));
+                    radians_degrees(ans, acos((pow(Info.a, 2) + pow(Info.b, 2) - pow(Info.c, 2)) / (2 * Info.b * Info.c)));
                 }
                 else if (x == "C" && Info.a != 0 && Info.b != 0 && Info.c != 0) {
-                    radianDegrees(ans, acos((pow(Info.a, 2) + pow(Info.b, 2) - pow(Info.c, 2)) / (2 * Info.a * Info.c)));
+                    radians_degrees(ans, acos((pow(Info.a, 2) + pow(Info.b, 2) - pow(Info.c, 2)) / (2 * Info.a * Info.c)));
                 }*/
             }
         }
-        else if (x == "a" || x == "b" || x == "c") {
+        else if (x == "a" || x == "b" || x == "c" && angle_count == 2 && side_count == 1) {
             //Calc. side's when 2 angle's & 1 side known - trig (sine rule)
             if (x == "a" && Info.A != 0 && Info.B != 0 && Info.b != 0) {
                 ans = sin(Info.Ar) * Info.b / sin(Info.Br);
@@ -487,126 +564,341 @@ int calculations(Triangle& Info) {
     }
     else {
         error(2, x);
-        return 1;
+        return;
     }
 
-    std::cout << x << " = " << ans << "\n";
+    std::cout << "\n" << x << " = " << ans;
 }
 
 void userInput() {
     Triangle Info;
 
-    std::cout << "Please input corresponding angle and side value's. Enter 0 if no value present" << "\n";
-    std::cout << "(Capital=Angle, Lowercase=Side.)" << "\n" << "\n";
+    int angle_count = 0, side_count = 0;
+    std::string x;
 
-    std::cout << "\t" << "A = ";
-    std::cin >> Info.A;
-    degreesRadians(Info.Ar, inf_radian[0], Info.A);
+    std::cout << "Wanted prop: ";
+    std::cin >> x;
+    std::cout << "\n";
 
-    std::cout << "\t" << "B = ";
-    std::cin >> Info.B;
-    inf_angle[1] = Info.B;
-    degreesRadians(Info.Br, inf_radian[1], Info.B);
+    if (x != "A" && x != "B" && x != "C" && x != "a" && x != "b" && x != "c" && x != "Area" && x != "area") {
+        std::cout << "\nPlease enter a valid aim.";
+        userInput();
+        exit;
+    }
+    if (x != "A") {
+        std::cout << "\tA = ";
+        std::cin >> Info.A;
+        degrees_radians(Info.A, Info.Ar);
+    }
+    if (x != "B") {
+        std::cout << "\tB = ";
+        std::cin >> Info.B;
+        degrees_radians(Info.B, Info.Br);
+    }
+    if (x != "B") {
+        std::cout << "\tC = ";
+        std::cin >> Info.C;
+        degrees_radians(Info.C, Info.Cr);
+    }
 
-    std::cout << "\t" << "C = ";
-    std::cin >> Info.C;
-    inf_angle[2] = Info.C;
-    degreesRadians(Info.Cr, inf_radian[2], Info.C);
+    if (Info.A != 0) {
+        ++angle_count;
+    }
+    if (Info.B != 0) {
+        ++angle_count;
+    }
+    if (Info.C != 0) {
+        ++angle_count;
+    }
 
     //input check
-    if ((Info.A + Info.B + Info.C) > 180) {
+    if ((Info.A + Info.B + Info.C) > 180 || ((Info.A + Info.B + Info.C) == 180 && angle_count != 3) || ((Info.A + Info.B + Info.C) < 180 && angle_count == 3)) {
         error(1, x);
         userInput();
         return;
     }
 
-    std::cout << "\t" << "a = ";
-    std::cin >> Info.a;
-    inf_side[0] = Info.a;
-
-    std::cout << "\t" << "b = ";
-    std::cin >> Info.b;
-    inf_side[1] = Info.b;
-
-    std::cout << "\t" << "c = ";
-    std::cin >> Info.c;
-    inf_side[2] = Info.c;
-
-    std::cout << "\t" << "Area = ";
-    std::cin >> Info.Area;
-
-    std::cout << "\n";
-
-    std::cout << "Angle's: " << Info.A << ", " << Info.B << ", " << Info.C << "\n";
-    std::cout << "Radian's: " << Info.Ar << ", " << Info.Br << ", " << Info.Cr << "\n";
-    std::cout << "Side's: " << Info.a << ", " << Info.b << ", " << Info.c << "\n";
-    std::cout << "Area: " << Info.Area << "\n";
-
-    //error - inf_values_present always = 0
-    for (i = 0; i < 3; i++) {
-        if (inf_angle[i] != 0) {
-            ++inf_angles_present;
-        }
-        if (inf_side[i] != 0) {
-            ++inf_sides_present;
-        }
+    //Change from || to bool
+    if (Info.A || Info.B || Info.C == 90) {
+        right_angled = true;
     }
 
-    inf_values_present = inf_angles_present + inf_sides_present;
-    std::cout << "No. of value's present: " << inf_values_present << "\n" << "\n";
+    if (x != "a") {
+        std::cout << "\ta = ";
+        std::cin >> Info.a;
+    }
+    if (x != "b") {
+        std::cout << "\tb = ";
+        std::cin >> Info.b;
+    }
+    if (x != "c") {
 
-    std::cout << "What would you like to calculate (capital=angle, lowercase=side): ";
-    std::cin >> x;
-    std::cout << "\n";
+        std::cout << "\tc = ";
+        std::cin >> Info.c;
+    }
 
-    calculations(Info);
+    if (Info.a != 0) {
+        ++side_count;
+    }
+    if (Info.b != 0) {
+        ++side_count;
+    }
+    if (Info.c != 0) {
+        ++side_count;
+    }
+
+    if (x != "Area" && x != "area") {
+        std::cout << "\tArea = ";
+        std::cin >> Info.Area;
+    }
+
+    if (debug) {
+        std::cout << "\n\nWanted prop: " << x;
+        std::cout << "\nAngle's: " << Info.A << ", " << Info.B << ", " << Info.C;
+        std::cout << "\nRadian's: " << Info.Ar << ", " << Info.Br << ", " << Info.Cr;
+        std::cout << "\nSide's: " << Info.a << ", " << Info.b << ", " << Info.c;
+        std::cout << "\nArea: " << Info.Area;
+    }
+
+    calculations(Info, angle_count, side_count, x);
 }
 
-//Implement automated testing from file
-//To use file input once developed enable by removing commentsfor input selection type in main()
-void fileInput() {
-    
+void fileInput(std::string file) {
+    Triangle Info;
+
+    debug = true;
+
+    if (std::ifstream input_file{ file }) {
+
+        std::string line, x;
+        int length = 0, line_length = 0, read = 0;
+        double expected_ans = 0;
+
+        while (std::getline(input_file, line)) {
+            length++;
+        }
+
+        if (debug) {
+            std::cout << "\nLines: " << length;
+        }
+
+        input_file.close();
+        input_file.open(file);
+
+        while (std::getline(input_file, line)) {
+            int prop_count = 0, side_count = 0, angle_count = 0, output = 0;
+
+            line_length = line.length();
+
+            if (debug) {
+                std::cout << "\n\n\n\n\n\n" << line;
+                std::cout << "\nLine length = " << line_length;
+            }
+
+            for (int character = 0; character < line_length; character++) {
+                if (line[character] == ' ') {
+                    prop_count++;
+                }
+            }
+
+            prop_count++;
+
+            if (debug) {
+                std::cout << "\nProp count = " << prop_count;
+            }
+            
+            if (prop_count != 9) {
+                error(7, file);
+                std::exit(1);
+            }
+
+            for (int character = 0; character < line_length; character++) {
+                int read = 0;
+                std::string temp, prop;
+
+                //if (line[character] == ' ' || line[character] == line[0]) {
+                if (line[character] == ' ') {
+                    for (read = character - 1; read > 0; read--) {
+                        if (line[read] == ' ') {
+                            break;
+                        }
+                    }
+                    for (read; read < character; read++) {
+                        temp = line[read];
+                        prop = prop + temp;
+
+                        if (debug) {
+                            std::cout << "\n\nTemp = " << temp;
+                            std::cout << "\nProperty = " << prop;
+                            std::cout << "\nOutput: " << output;
+                        }
+                    }
+
+                    if (output == 0) {
+                        x = prop;
+                    }
+                    else if (output == 1) {
+                        Info.A = stoi(prop);
+                        degrees_radians(Info.A, Info.Ar);
+                    }
+                    else if (output == 2) {
+                        Info.B = stoi(prop);
+                        degrees_radians(Info.B, Info.Br);
+                    }
+                    else if (output == 3) {
+                        Info.C = stoi(prop);
+                        degrees_radians(Info.C, Info.Cr);
+                    }
+                    else if (output == 4) {
+                        Info.a = stoi(prop);
+                    }
+                    else if (output == 5) {
+                        Info.b = stoi(prop);
+                    }
+                    else if (output == 6) {
+                        Info.c = stoi(prop);
+                    }
+                    else if (output == 7) {
+                        Info.Area = stoi(prop);
+                    }
+
+                    output++;
+                }
+
+                if (character == line_length - 1) {
+                    for (read = line_length - 1; 0 < read; read--) {
+                        if (debug) {
+                            std::cout << "\n\nCharInt: " << read;
+                            std::cout << "\nCharChar: "<< line[read];
+                        }
+
+                        if (line[read] == ' ') {
+                            break;
+                        }
+                    }
+
+                    for (int character = read + 1; character <= line_length - 1; character++) {
+                        temp = line[character];
+                        prop = prop + temp;
+
+                        if (debug) {
+                            std::cout << "\n\nTemp = " << temp;
+                            std::cout << "\nProperty = " << prop;
+                            std::cout << "\nOutput: " << output;
+                        }
+
+                        expected_ans = stoi(prop);
+                    }
+
+                    output++;
+                }
+            }
+
+            if (x != "A" && x != "B" && x != "C" && x != "a" && x != "b" && x != "c" && x != "Area" && x != "area") {
+                if (debug) {
+                    std::cout << "\n" << "|" << x << "|";
+                }
+
+                std::cout << "\nPlease edit file to a valid aim.\n";
+                main(0, param_remove);
+                return;
+            }
+
+            if (Info.A != 0) {
+                ++angle_count;
+            }
+            if (Info.B != 0) {
+                ++angle_count;
+            }
+            if (Info.C != 0) {
+                ++angle_count;
+            }
+
+            //input check
+            if ((Info.A + Info.B + Info.C) > 180 || ((Info.A + Info.B + Info.C) == 180 && angle_count != 3) || ((Info.A + Info.B + Info.C) < 180 && angle_count == 3)) {
+                error(6, file);
+                std::exit(1);
+            }
+
+            if (Info.A || Info.B || Info.C == 90) {
+                right_angled = true;
+            }
+
+            if (debug) {
+                std::cout << "\n\nWanted prop: " << x;
+                std::cout << "\nAngle's: " << Info.A << ", " << Info.B << ", " << Info.C;
+                std::cout << "\nRadian's: " << Info.Ar << ", " << Info.Br << ", " << Info.Cr;
+                std::cout << "\nSide's: " << Info.a << ", " << Info.b << ", " << Info.c;
+                std::cout << "\nArea: " << Info.Area;
+                std::cout << "\nExpected ans: " << expected_ans;
+            }
+            
+            calculations(Info, angle_count, side_count, x);
+        }
+    }
+    else {
+        error(5, file);
+    }
 }
 
-int repeatFunc() {
+void repeatFunc() {
     std::string repeat;
 
-    std::cout << "\n" << "Repeat (y/n)? ";
+    std::cout << "\nRepeat (y/n)? ";
     std::cin >> repeat;
+
     if (repeat == "y") {
         std::cout << "\n";
-        main();
-        return 1;
+        main(0, param_remove);
+        return;
     }
     else if (repeat == "n") {
-        return 1;
+        return;
     }
     else {
-        std::cout << "\n" << "Enter y or n.";
+        std::cout << "\nEnter y or n.";
         repeatFunc();
     }
 }
 
-void main() {
-    userInput();
-    repeatFunc();
-
-    /*string inputType;
-
-    cout << "Would you like to use user input or file input (u = user, f = file): ";
-    cin >> inputType;
-    cout << "\n";
-
-    if (inputType == "u") {
-        userInput();
-        repeatFunc();
-    }
-    else if (inputType == "f") {
-        fileInput();
-        repeatFunc();
-    }
-    else {
-        cout << "Please enter a valid operating mode." << "\n";
-        main();
+int main(int argc, char** argv) {
+    /*for (int i = 1; i < argc; i++) {
+        if (argv[i] == "-h" || "--help") {
+            std::cout << "Help file";
+        }
+        else if (argv[i] == "-f" || "--fileInput") {
+            fileInput(argv[i + 1]);
+        }
+        else {
+            std::cout << "This is not a valid parameter.";
+            main(1, param_remove);
+            return 1;
+        }
     }*/
+
+    #ifdef _WIN32
+    //userInput();
+
+    //std::string input_file;
+    //std::cout << "File to read from: ";
+    //std::cin >> input_file;
+    //fileInput(input_file);
+    fileInput("file.txt");
+    #else
+    switch (getopt(argc, argv, "hfd:")) {
+        case 'h':
+            std::cout << "Help file";
+        case 't':
+            testing = true;
+        case 'd':
+            debug = true;
+        case 'f':
+            fileInput(optarg);
+        default:
+            userInput();
+            repeatFunc();
+    }
+    #endif
+
+    std::cout << "\n";
 }
