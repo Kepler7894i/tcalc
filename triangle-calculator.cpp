@@ -35,23 +35,23 @@ void radians_degrees(double radians, double& degrees) {
 void error(int error_num, std::string action) {
     switch (error_num) {
         case 1: {
-            std::cout << "\n\nError: Angles !<= 180 degree.\n\n";
+            std::cout << "\n\nError: Angles !<= 180 degree.";
         }
         case 2: {
-            std::cout << "Error: " << action << " is incalculabe with information provided.\n\n";
+            std::cout << "\n\nError: " << action << " is incalculabe with information provided.";
             break;
         }
         case 3: {
-            std::cout << "Error: Two sides cannot be 0.\n\n";
+            std::cout << "\n\nError: Two sides cannot be 0.\n\n";
             break;
         }
         case 4: {
-            std::cout << "One or more inputted values is incorrect compared to other values.\n\n";
+            std::cout << "\n\nOne or more inputted values is incorrect compared to other values.";
             userInput();
             break;
         }
         case 5: {
-            std::cout << "Error: Failed to open - " << action << "\nFile to read from: ";
+            std::cout << "\n\nError: Failed to open " << action << "\nFile to read from: ";
             std::string file;
             std::cin >> file;
             fileInput(file);
@@ -60,8 +60,7 @@ void error(int error_num, std::string action) {
         case 6: {
             int fixed;
 
-            std::cout << "\nError: Incorrect angles in file.";
-            std::cout << "\nFixed? ";
+            std::cout << "\n\nError: Incorrect angles in file." << "\nFixed? ";
             std::cin >> fixed;
 
             if (fixed == 1) {
@@ -80,12 +79,12 @@ void error(int error_num, std::string action) {
         case 7: {
             int fixed;
 
-            std::cout << "\nError: Incorrect number of properties in file. Fixed? ";
+            std::cout << "\n\nError: Incorrect number of properties in file. Fixed? ";
             std::cout << "\n\n       Correct layout:";
             std::cout << "\n         wanted_property A B C a b c Area expected_ans - Spaces between the values";
             std::cout << "\n                                                       - Capital letters are angles, lowercase letters are sides";
             std::cout << "\n                                                       - Opposite angles and sides should be the same letter";
-            std::cout << "Fixed? ";
+            std::cout << "\n\nFixed? ";
             std::cin >> fixed;
 
             if (fixed == 1) {
@@ -95,16 +94,16 @@ void error(int error_num, std::string action) {
                 return;
             }
             else {
-                std::cout << "Enter 1 or 0.";
-                error(6, action);
+                std::cout << "\nEnter 1 or 0.";
+                error(7, action);
             }
         }
         case 8: {
             if (debug) {
-                std::cout << "\nError: Invalid parameter " << action << " for tcalc.\n";
+                std::cout << "\n\nError: Invalid parameter " << action << " for tcalc.";
             }
             else {
-                std::cout << "\nError: Invalid parameter for tcalc.\n";
+                std::cout << "\n\nError: Invalid parameter for tcalc.";
             }
 
             exit(1);
@@ -982,7 +981,8 @@ void calculations(Triangle& Info, std::string x) {
         return;
     }
 
-    std::cout << "\n\n" << x << " = " << ans << "\n";
+    std::cout << "\n" << x << " = " << ans;
+
     return;
 }
 
@@ -990,6 +990,7 @@ void userInput() {
     Triangle Info;
 
     std::string x;
+    double expected_ans = 0;
 
     std::cout << "\nWanted prop: ";
     std::cin >> x;
@@ -1067,17 +1068,34 @@ void userInput() {
         std::cin >> Info.Area;
     }
 
+    if (testing) {
+        std::cout << "\tExpected ans = ";
+        std::cin >> expected_ans;
+    }
+
     if (debug) {
-        std::cout << "\nWanted prop: " << x;
+        std::cout << "\n\nWanted prop: " << x;
         std::cout << "\nAngle's: " << Info.A << ", " << Info.B << ", " << Info.C;
         std::cout << "\nRadian's: " << Info.Ar << ", " << Info.Br << ", " << Info.Cr;
         std::cout << "\nSide's: " << Info.a << ", " << Info.b << ", " << Info.c;
         std::cout << "\nArea: " << Info.Area;
         std::cout << "\nAngle count: " << Info.angle_count;
         std::cout << "\nSide count: " << Info.side_count;
+        std::cout << "\nExpected ans: " << expected_ans;
     }
 
     calculations(Info, x);
+
+    if (testing) {
+        std::cout << "\nExpected ans = " << expected_ans;
+
+        double margin_of_error_double = ans - expected_ans;
+        std::cout << "\n\nError (double) = " << margin_of_error_double;
+        float margin_of_error_float = ans - expected_ans;
+        std::cout << "\nError (float) = " << margin_of_error_float;
+        int margin_of_error_int = ans - expected_ans;
+        std::cout << "\nError (int) = " << margin_of_error_int;
+    }
 }
 
 void fileInput(std::string file) {
@@ -1266,25 +1284,15 @@ void fileInput(std::string file) {
             calculations(Info, x);
 
             if (testing) {
-                if (expected_ans == 0) {
-                    break;
-                }
-                else {
-                    std::cout << "\nAns = " << ans;
-                    std::cout << "\nExpected ans = "<< expected_ans;
+                std::cout << "\nExpected ans = " << expected_ans;
 
-                    std::cout << "\n";
-
-                    double margin_of_error_double = ans - expected_ans;
-                    std::cout << "\nError (double) = " << margin_of_error_double;
-                    float margin_of_error_float = ans - expected_ans;
-                    std::cout << "\nError (float) = " << margin_of_error_float;
-                    int margin_of_error_int = ans - expected_ans;
-                    std::cout << "\nError (int) = " << margin_of_error_int;
-                }
+                double margin_of_error_double = ans - expected_ans;
+                std::cout << "\n\nError (double) = " << margin_of_error_double;
+                float margin_of_error_float = ans - expected_ans;
+                std::cout << "\nError (float) = " << margin_of_error_float;
+                int margin_of_error_int = ans - expected_ans;
+                std::cout << "\nError (int) = " << margin_of_error_int;
             }
-
-            std::cout << "\n";
         }
     }
     else {
@@ -1331,6 +1339,9 @@ int main(int argc, char** argv) {
 
     userInput();
     repeatFunc();
+
+    std::cout << "\n\n";
+
     return 0;
 
     //std::string input_file;
@@ -1397,12 +1408,13 @@ int main(int argc, char** argv) {
 
     if (fileMode) {
         fileInput(argument_file);
-        exit(0);
     }
     else if (!fileMode) {
         userInput();
-        exit(0);
     }
+
+    std::cout << "\n\n";
+    exit(0);
 
     #endif
 }
