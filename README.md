@@ -18,10 +18,10 @@ Linux will allow you to run the program with ./(downloaded file name)
 
 ### To compile:  
 Download triangle-calculator.cpp and then you can compile this given you OS and instruction set  
-Windows 32-bit - Use an IDE
-Windows 64-bit - Use an IDE
-Linux 32-bit - g++ -m32 tcalc.cpp -o tcalc-x86  
-Linux 64-bit - g++ -m64 tcalc.cpp -o tcalc-x64  
+Windows 32-bit - Use an IDE  
+Windows 64-bit - Use an IDE  
+Linux 32-bit - g++ -m32 tcalc.cpp -o tcalc-linux-x86  
+Linux 64-bit - g++ -m64 tcalc.cpp -o tcalc-linux-x64  
 
 ### Use:  
 When the program load's enter in any known value's for angle's or side's on the triangle as well the side or angle to be calculated. If it is possible based off of that information it will calculate the side or angle specified by working out the equation to use and then entering value's into the formula.  
