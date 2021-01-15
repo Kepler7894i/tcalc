@@ -1,4 +1,4 @@
-# triangle-calculator
+# tcalc
 
 This repository is for a C++ program that uses logic to find the best equation & calculate requested property of the triangle using it based off of known properties of the triangle. Designed to be as automated as possible.
 
