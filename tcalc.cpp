@@ -1011,7 +1011,7 @@ void userInput() {
         std::cin >> Info.B;
         degrees_radians(Info.B, Info.Br);
     }
-    if (x != "B") {
+    if (x != "C") {
         std::cout << "\tC = ";
         std::cin >> Info.C;
         degrees_radians(Info.C, Info.Cr);
@@ -1318,6 +1318,10 @@ void repeatFunc() {
         std::cout << "\nEnter y or n.";
         repeatFunc();
     }
+}
+
+void hi() {
+    std::cout << "hi";
 }
 
 int main(int argc, char** argv) {
