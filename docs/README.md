@@ -6,6 +6,8 @@ This program is in stable currently as all known bugs fixed (report any as an is
 Instead of compiling you can download a pre-made binaries from /binaries.
 If you don't know what instruction set your computer used download the corresponding x86 file for your OS.
 
+### Compiling:
+
 <!--
 ============================================================================================================  
 | Source OS | Target OS | Target architecture | Prerequisites | Command                                    |  
