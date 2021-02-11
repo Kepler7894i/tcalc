@@ -84,7 +84,7 @@ If you don't know what instruction set your computer used download the correspon
 ============================================================================================================  
 -->
 
-![Compiling](https://github.com/Kepler7894i/tcalc/blob/dev/compiling.png?raw=true)
+![Compiling](https://github.com/Kepler7894i/tcalc/blob/dev/docs/compiling.png?raw=true)
 
 ### Use:  
 When the program load's enter in any known value's for angle's or side's on the triangle as well the side or angle to be calculated. If it is possible based off of that information it will calculate the side or angle specified by working out the equation to use and then entering value's into the formula.  
