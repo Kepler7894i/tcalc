@@ -7,7 +7,8 @@ This program is in stable currently as all known bugs fixed (report any as an is
 Instead of compiling you can download a pre-made binaries from /binaries.
 If you don't know what instruction set your computer used download the corresponding x86 file for your OS.
 
-[//]: # ============================================================================================================  
+<!--
+============================================================================================================  
 | Source OS | Target OS | Target architecture | Prerequisites | Command                                    |  
 ============================================================================================================  
 |  Linux    |  Linux    |  x86                |  g++          |  g++ -m32 main.cpp -o tcalc-Linux_x86      |  
@@ -82,6 +83,7 @@ If you don't know what instruction set your computer used download the correspon
 |           |           |----------------------------------------------------------------------------------|  
 |           |           |  RISC               |               |                                            |  
 ============================================================================================================  
+-->
 
 ### Use:  
 When the program load's enter in any known value's for angle's or side's on the triangle as well the side or angle to be calculated. If it is possible based off of that information it will calculate the side or angle specified by working out the equation to use and then entering value's into the formula.  
