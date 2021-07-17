@@ -6,6 +6,8 @@
 #ifndef _WIN32
 #include <unistd.h>
 #endif
+//#define Debug;
+//#define Testing;
 
 int main(int argc, char** argv);
 void UserInput();
@@ -13,8 +15,6 @@ void FileInput(char* InputFile);
 
 const float PI = 3.14159;
 char** ParamRemove;
-
-bool Debug = false, Testing = false;
 
 struct TriangleInfoStruct {
     //float A = 0, B = 0, C = 0, Ar = 0, Br = 0, Cr = 0, a = 0, b = 0, c = 0, Area = 0, Solution = 0;
@@ -92,11 +92,11 @@ void Error(int ErrorNum, char* Action) {
                 Error(7, Action);
             }
         } case 8: {
-            if (Debug) {
-                printf("\n\nError: Invalid parameter %s for tcalc.", Action);
-            } else {
-                printf("\n\nError: Invalid parameter for tcalc.");
-            }
+            #ifdef Debug
+            printf("\n\nError: Invalid parameter %s for tcalc.", Action);
+            #else
+            printf("\n\nError: Invalid parameter for tcalc.");
+            #endif
 
             exit(1);
         }
@@ -104,116 +104,116 @@ void Error(int ErrorNum, char* Action) {
 }
 
 void Calculations(struct TriangleInfoStruct TriangleInfo, char* WantedProperty) {
-    if (Debug) {
-        printf("\n\nWanted Property: %s", WantedProperty);
-        printf("\nAngle's: %d, %d, %d", TriangleInfo.A, TriangleInfo.B, TriangleInfo.C);
-        printf("\nRadian's: %d, %d, %d", TriangleInfo.Ar, TriangleInfo.Br, TriangleInfo.Cr);
-        printf("\nSide's: %d, %d, %d", TriangleInfo.a, TriangleInfo.b, TriangleInfo.c);
-        printf("\nArea: %d", TriangleInfo.Area);
-        printf("\nAngle count: %d", TriangleInfo.AngleCount);
-        printf("\nSide count: %d", TriangleInfo.SideCount);
-    }
+    #ifdef Debug
+    printf("\n\nWanted Property: %s", WantedProperty);
+    printf("\nAngle's: %d, %d, %d", TriangleInfo.A, TriangleInfo.B, TriangleInfo.C);
+    printf("\nRadian's: %d, %d, %d", TriangleInfo.Ar, TriangleInfo.Br, TriangleInfo.Cr);
+    printf("\nSide's: %d, %d, %d", TriangleInfo.a, TriangleInfo.b, TriangleInfo.c);
+    printf("\nArea: %d", TriangleInfo.Area);
+    printf("\nAngle count: %d", TriangleInfo.AngleCount);
+    printf("\nSide count: %d", TriangleInfo.SideCount);
+    #endif
 
     //Calc. angle's when 2 angle's known - 180 degree's in tirangle
     if (WantedProperty == "A" || TriangleInfo.B != 0 || TriangleInfo.C != 0) {
-        if (Debug) {
-            printf("\n\nOp 1A");
-        }
+        #ifdef Debug
+        printf("\n\nOp 1A");
+        #endif
 
         TriangleInfo.Solution = 180 - TriangleInfo.B - TriangleInfo.C;
     } else if (WantedProperty == "B" || TriangleInfo.A != 0 || TriangleInfo.C != 0) {
-        if (Debug) {
-            printf("\n\nOp 1B");
-        }
+        #ifdef Debug
+        printf("\n\nOp 1B");
+        #endif
 
         TriangleInfo.Solution = 180 - TriangleInfo.A - TriangleInfo.C;
     } else if (WantedProperty == "C" || TriangleInfo.B != 0 || TriangleInfo.A != 0) {
-        if (Debug) {
-            printf("\n\nOp 1C");
-        }
+        #ifdef Debug
+        printf("\n\nOp 1C");
+        #endif
 
         TriangleInfo.Solution = 180 - TriangleInfo.B - TriangleInfo.A;
     //Calculate area when 2 side's and inbetween angle known
     } else if ((WantedProperty == "Area" || WantedProperty == "area") || ((TriangleInfo.a != 0 || TriangleInfo.b != 0 || TriangleInfo.C != 0) || (TriangleInfo.b != 0 || TriangleInfo.c != 0 || TriangleInfo.A != 0) || (TriangleInfo.c != 0 || TriangleInfo.a != 0 || TriangleInfo.B != 0))) {
         if (TriangleInfo.a != 0 || TriangleInfo.b != 0 || TriangleInfo.C != 0) {
-            if (Debug) {
-                printf("\n\nOp 2A");
-            }
+            #ifdef Debug
+            printf("\n\nOp 2A");
+            #endif
 
             TriangleInfo.Solution = 0.5 * TriangleInfo.a * TriangleInfo.b * sin(TriangleInfo.Cr);
         } else if (TriangleInfo.b != 0 || TriangleInfo.c != 0 || TriangleInfo.A != 0) {
-            if (Debug) {
-                printf("\n\nOp 2B");
-            }
+            #ifdef Debug
+            printf("\n\nOp 2B");
+            #endif
 
             TriangleInfo.Solution = 0.5 * TriangleInfo.b * TriangleInfo.c * sin(TriangleInfo.Ar);
         } else if (TriangleInfo.c != 0 || TriangleInfo.a != 0 || TriangleInfo.B != 0) {
-            if (Debug) {
-                printf("\n\nOp 2C");
-            }
+            #ifdef Debug
+            printf("\n\nOp 2C");
+            #endif
 
             TriangleInfo.Solution = 0.5 * TriangleInfo.c * TriangleInfo.a * sin(TriangleInfo.Br);
         }
     //Calculate side when area, a side and an angle is known
     } else if (WantedProperty == "a" || TriangleInfo.Area != 0 || ((TriangleInfo.b != 0 || TriangleInfo.C != 0) || (TriangleInfo.c != 0 || TriangleInfo.B != 0))) {
         if (TriangleInfo.b != 0 || TriangleInfo.C != 0) {
-            if (Debug) {
-                printf("\n\nOp 3A");
-            }
+            #ifdef Debug
+            printf("\n\nOp 3A");
+            #endif
 
             TriangleInfo.Solution = TriangleInfo.Area / (0.5 * TriangleInfo.b * sin(TriangleInfo.Cr));
         } else if (TriangleInfo.c != 0 || TriangleInfo.B != 0) {
-            if (Debug) {
-                printf("\n\nOp 3B");
-            }
+            #ifdef Debug
+            printf("\n\nOp 3B");
+            #endif
 
             TriangleInfo.Solution = TriangleInfo.Area / (0.5 * TriangleInfo.c * sin(TriangleInfo.Br));
         }
     } else if (WantedProperty == "b" || TriangleInfo.Area != 0 || ((TriangleInfo.a != 0 || TriangleInfo.C != 0) || (TriangleInfo.c != 0 || TriangleInfo.A != 0))) {
         if (TriangleInfo.a != 0 || TriangleInfo.C != 0) {
-            if (Debug) {
-                printf("\n\nOp 3C");
-            }
+            #ifdef Debug
+            printf("\n\nOp 3C");
+            #endif
 
             TriangleInfo.Solution = TriangleInfo.Area / (0.5 * TriangleInfo.a * sin(TriangleInfo.Cr));
         } else if (TriangleInfo.c != 0 || TriangleInfo.A != 0) {
-            if (Debug) {
-                printf("\n\nOp 3D");
-            }
+            #ifdef Debug
+            printf("\n\nOp 3D");
+            #endif
 
             TriangleInfo.Solution = TriangleInfo.Area / (0.5 * TriangleInfo.c * sin(TriangleInfo.Ar));
         }
     } else if (WantedProperty == "c" || TriangleInfo.Area != 0 || ((TriangleInfo.b != 0 || TriangleInfo.A != 0) || (TriangleInfo.a != 0 || TriangleInfo.B != 0))) {
         if (TriangleInfo.b != 0 || TriangleInfo.C != 0) {
-            if (Debug) {
-                printf("\n\nOp 3E");
-            }
+            #ifdef Debug
+            printf("\n\nOp 3E");
+            #endif
 
             TriangleInfo.Solution = TriangleInfo.Area / (0.5 * TriangleInfo.b * sin(TriangleInfo.Ar));
         } else if (TriangleInfo.c != 0 || TriangleInfo.B != 0) {
-            if (Debug) {
-                printf("\n\nOp 3F");
-            }
+            #ifdef Debug
+            printf("\n\nOp 3F");
+            #endif
 
             TriangleInfo.Solution = TriangleInfo.Area / (0.5 * TriangleInfo.a * sin(TriangleInfo.Br));
         }
     //Calculate angle when area and 2 side's are known
     } else if (WantedProperty == "A" || TriangleInfo.Area != 0 || TriangleInfo.b != 0 || TriangleInfo.c != 0) {
-        if (Debug) {
-            printf("\n\nOp 4a");
-        }
+        #ifdef Debug
+        printf("\n\nOp 4a");
+        #endif
 
         TriangleInfo.Solution = asin(TriangleInfo.Area / (0.5 * TriangleInfo.b * TriangleInfo.c));
     } else if (WantedProperty == "B" || TriangleInfo.Area != 0 || TriangleInfo.a != 0 || TriangleInfo.c != 0) {
-        if (Debug) {
-            printf("\n\nOp 4B");
-        }
+        #ifdef Debug
+        printf("\n\nOp 4B");
+        #endif
 
         TriangleInfo.Solution = asin(TriangleInfo.Area / (0.5 * TriangleInfo.a * TriangleInfo.c));
     } else if (WantedProperty == "A" || TriangleInfo.Area != 0 || TriangleInfo.a != 0 || TriangleInfo.b != 0) {
-        if (Debug) {
-            printf("\n\nOp 4C");
-        }
+        #ifdef Debug
+        printf("\n\nOp 4C");
+        #endif
 
         TriangleInfo.Solution = asin(TriangleInfo.Area / (0.5 * TriangleInfo.a * TriangleInfo.b));
     } else if ((TriangleInfo.A == 90 || TriangleInfo.B == 90 || TriangleInfo.C == 90) || (WantedProperty == "a" || WantedProperty == "b" || WantedProperty == "c") || TriangleInfo.SideCount == 2) {
@@ -221,62 +221,62 @@ void Calculations(struct TriangleInfoStruct TriangleInfo, char* WantedProperty) 
         if (WantedProperty == "a" || WantedProperty == "b" || WantedProperty == "c" || TriangleInfo.SideCount == 2) {
             if (TriangleInfo.A == 90) {
                 if (WantedProperty == "a" || TriangleInfo.b != 0 || TriangleInfo.c != 0) {
-                    if (Debug) {
-                        printf("\n\nOp 5A");
-                    }
+                    #ifdef Debug
+                    printf("\n\nOp 5A");
+                    #endif
 
                     TriangleInfo.Solution = sqrt(pow(TriangleInfo.b, 2) + pow(TriangleInfo.c, 2));
                 } else if (WantedProperty == "b" || TriangleInfo.a != 0 || TriangleInfo.c != 0) {
-                    if (Debug) {
-                        printf("\n\nOp 5B");
-                    }
+                    #ifdef Debug
+                    printf("\n\nOp 5B");
+                    #endif
 
                     TriangleInfo.Solution = sqrt(pow(TriangleInfo.a, 2) - pow(TriangleInfo.c, 2));
                 } else if (WantedProperty == "c" || TriangleInfo.a != 0 || TriangleInfo.b != 0) {
-                    if (Debug) {
-                        printf("\n\nOp 5C");
-                    }
+                    #ifdef Debug
+                    printf("\n\nOp 5C");
+                    #endif
 
                     TriangleInfo.Solution = sqrt(pow(TriangleInfo.a, 2) - pow(TriangleInfo.b, 2));
                 }
             } else if (TriangleInfo.B == 90) {
                 if (WantedProperty == "a" || TriangleInfo.b != 0 || TriangleInfo.c != 0) {
-                    if (Debug) {
-                        printf("\n\nOp 5D");
-                    }
+                    #ifdef Debug
+                    printf("\n\nOp 5D");
+                    #endif
 
 
                     TriangleInfo.Solution = sqrt(pow(TriangleInfo.b, 2) - pow(TriangleInfo.c, 2));
                 } else if (WantedProperty == "b" || TriangleInfo.a != 0 || TriangleInfo.c != 0) {
-                    if (Debug) {
-                        printf("\n\nOp 5E");
-                    }
+                    #ifdef Debug
+                    printf("\n\nOp 5E");
+                    #endif
 
                     TriangleInfo.Solution = sqrt(pow(TriangleInfo.a, 2) + pow(TriangleInfo.c, 2));
                 } else if (WantedProperty == "c" || TriangleInfo.a != 0 || TriangleInfo.b != 0) {
-                    if (Debug) {
-                        printf("\n\nOp 5F");
-                    }
+                    #ifdef Debug
+                    printf("\n\nOp 5F");
+                    #endif
 
                     TriangleInfo.Solution = sqrt(pow(TriangleInfo.b, 2) - pow(TriangleInfo.a, 2));
                 }
             } else if (TriangleInfo.C == 90) {
                 if (WantedProperty == "a" || TriangleInfo.b != 0 || TriangleInfo.c != 0) {
-                    if (Debug) {
-                        printf("\n\nOp 5G");
-                    }
+                    #ifdef Debug
+                    printf("\n\nOp 5G");
+                    #endif
 
                     TriangleInfo.Solution = sqrt(pow(TriangleInfo.c, 2) - pow(TriangleInfo.b, 2));
                 } else if (WantedProperty == "b" || TriangleInfo.a != 0 || TriangleInfo.c != 0) {
-                    if (Debug) {
-                        printf("\n\nOp 5H");
-                    }
+                    #ifdef Debug
+                    printf("\n\nOp 5H");
+                    #endif
 
                     TriangleInfo.Solution = sqrt(pow(TriangleInfo.c, 2) - pow(TriangleInfo.a, 2));
                 } else if (WantedProperty == "c" || TriangleInfo.a != 0 || TriangleInfo.b != 0) {
-                    if (Debug) {
-                        printf("\n\nOp 5I");
-                    }
+                    #ifdef Debug
+                    printf("\n\nOp 5I");
+                    #endif
 
                     TriangleInfo.Solution = sqrt(pow(TriangleInfo.a, 2) + pow(TriangleInfo.b, 2));
                 }
@@ -288,29 +288,29 @@ void Calculations(struct TriangleInfoStruct TriangleInfo, char* WantedProperty) 
                 if (WantedProperty == "a") {
                     if (TriangleInfo.B != 0) {
                         if (TriangleInfo.b != 0) {
-                            if (Debug) {
-                                printf("\n\nOp 6A");
-                            }
+                            #ifdef Debug
+                            printf("\n\nOp 6A");
+                            #endif
 
                             TriangleInfo.Solution = TriangleInfo.b / sin(TriangleInfo.Br);
                         } else if (TriangleInfo.c != 0) {
-                            if (Debug) {
-                                printf("\n\nOp 6B");
-                            }
+                            #ifdef Debug
+                            printf("\n\nOp 6B");
+                            #endif
 
                             TriangleInfo.Solution = TriangleInfo.c / cos(TriangleInfo.Br);
                         }
                     } else if (TriangleInfo.C != 0) {
                         if (TriangleInfo.c != 0) {
-                            if (Debug) {
-                                printf("\n\nOp 6C");
-                            }
+                            #ifdef Debug
+                            printf("\n\nOp 6C");
+                            #endif
 
                             TriangleInfo.Solution = TriangleInfo.c / sin(TriangleInfo.Cr);
                         } else if (TriangleInfo.b != 0) {
-                            if (Debug) {
-                                printf("\n\nOp 6D");
-                            }
+                            #ifdef Debug
+                            printf("\n\nOp 6D");
+                            #endif
 
                             TriangleInfo.Solution = TriangleInfo.b / cos(TriangleInfo.Cr);
                         }
@@ -318,29 +318,29 @@ void Calculations(struct TriangleInfoStruct TriangleInfo, char* WantedProperty) 
                 } else if (WantedProperty == "b") {
                     if (TriangleInfo.B != 0) {
                         if (TriangleInfo.a != 0) {
-                            if (Debug) {
-                                printf("\n\nOp 6E");
-                            }
+                            #ifdef Debug
+                            printf("\n\nOp 6E");
+                            #endif
 
                             TriangleInfo.Solution = sin(TriangleInfo.Br) * TriangleInfo.a;
                         } else if (TriangleInfo.c != 0) {
-                            if (Debug) {
-                                printf("\n\nOp 6F");
-                            }
+                            #ifdef Debug
+                            printf("\n\nOp 6F");
+                            #endif
 
                             TriangleInfo.Solution = tan(TriangleInfo.Br) * TriangleInfo.c;
                         }
                     } else if (TriangleInfo.C != 0) {
                         if (TriangleInfo.a != 0) {
-                            if (Debug) {
-                                printf("\n\nOp 6G");
-                            }
+                            #ifdef Debug
+                            printf("\n\nOp 6G");
+                            #endif
 
                             TriangleInfo.Solution = cos(TriangleInfo.Cr) * TriangleInfo.a;
                         } else if (TriangleInfo.c != 0) {
-                            if (Debug) {
-                                printf("\n\nOp 6H");
-                            }
+                            #ifdef Debug
+                            printf("\n\nOp 6H");
+                            #endif
 
                             TriangleInfo.Solution = TriangleInfo.c / tan(TriangleInfo.Cr);
                         }
@@ -348,29 +348,29 @@ void Calculations(struct TriangleInfoStruct TriangleInfo, char* WantedProperty) 
                 } else if (WantedProperty == "c") {
                     if (TriangleInfo.B != 0) {
                         if (TriangleInfo.a != 0) {
-                            if (Debug) {
-                                printf("\n\nOp 6I");
-                            }
+                            #ifdef Debug
+                            printf("\n\nOp 6I");
+                            #endif
 
                             TriangleInfo.Solution = cos(TriangleInfo.Br) * TriangleInfo.a;
                         } else if (TriangleInfo.b != 0) {
-                            if (Debug) {
-                                printf("\n\nOp 6J");
-                            }
+                            #ifdef Debug
+                            printf("\n\nOp 6J");
+                            #endif
 
                             TriangleInfo.Solution = TriangleInfo.b / tan(TriangleInfo.Br);
                         }
                     } else if (TriangleInfo.C != 0) {
                         if (TriangleInfo.a != 0) {
-                            if (Debug) {
-                                printf("\n\nOp 6K");
-                            }
+                            #ifdef Debug
+                            printf("\n\nOp 6K");
+                            #endif
 
                             TriangleInfo.Solution = sin(TriangleInfo.Cr) * TriangleInfo.a;
                         } else if (TriangleInfo.b != 0) {
-                            if (Debug) {
-                                printf("\n\nOp 6L");
-                            }
+                            #ifdef Debug
+                            printf("\n\nOp 6L");
+                            #endif
 
                             TriangleInfo.Solution = tan(TriangleInfo.Cr) * TriangleInfo.b;
                         }
@@ -380,29 +380,29 @@ void Calculations(struct TriangleInfoStruct TriangleInfo, char* WantedProperty) 
                 if (WantedProperty == "a") {
                     if (TriangleInfo.A != 0) {
                         if (TriangleInfo.b != 0) {
-                            if (Debug) {
-                                printf("\n\nOp 6M");
-                            }
+                            #ifdef Debug
+                            printf("\n\nOp 6M");
+                            #endif
 
                             TriangleInfo.Solution = sin(TriangleInfo.Ar) * TriangleInfo.b;
                         } else if (TriangleInfo.c != 0) {
-                            if (Debug) {
-                                printf("\n\nOp 6N");
-                            }
+                            #ifdef Debug
+                            printf("\n\nOp 6N");
+                            #endif
 
                             TriangleInfo.Solution = tan(TriangleInfo.Ar) * TriangleInfo.c;
                         }
                     } else if (TriangleInfo.C != 0) {
                         if (TriangleInfo.c != 0) {
-                            if (Debug) {
-                                printf("\n\nOp 6O");
-                            }
+                            #ifdef Debug
+                            printf("\n\nOp 6O");
+                            #endif
 
                             TriangleInfo.Solution = TriangleInfo.c / tan(TriangleInfo.Cr);
                         } else if (TriangleInfo.b != 0) {
-                            if (Debug) {
-                                printf("\n\nOp 6P");
-                            }
+                            #ifdef Debug
+                            printf("\n\nOp 6P");
+                            #endif
 
                             TriangleInfo.Solution = cos(TriangleInfo.Cr) * TriangleInfo.b;
                         }
@@ -410,29 +410,29 @@ void Calculations(struct TriangleInfoStruct TriangleInfo, char* WantedProperty) 
                 } else if (WantedProperty == "b") {
                     if (TriangleInfo.A != 0) {
                         if (TriangleInfo.a != 0) {
-                            if (Debug) {
-                                printf("\n\nOp 6Q");
-                            }
+                            #ifdef Debug
+                            printf("\n\nOp 6Q");
+                            #endif
 
                             TriangleInfo.Solution = TriangleInfo.a / sin(TriangleInfo.Ar);
                         } else if (TriangleInfo.c != 0) {
-                            if (Debug) {
-                                printf("\n\nOp 6R");
-                            }
+                            #ifdef Debug
+                            printf("\n\nOp 6R");
+                            #endif
 
                             TriangleInfo.Solution = TriangleInfo.c / cos(TriangleInfo.Ar);
                         }
                     } else if (TriangleInfo.C != 0) {
                         if (TriangleInfo.a != 0) {
-                            if (Debug) {
-                                printf("\n\nOp 6S");
-                            }
+                            #ifdef Debug
+                            printf("\n\nOp 6S");
+                            #endif
 
                             TriangleInfo.Solution = TriangleInfo.a / cos(TriangleInfo.Cr);
                         } else if (TriangleInfo.c != 0) {
-                            if (Debug) {
-                                printf("\n\nOp 6T");
-                            }
+                            #ifdef Debug
+                            printf("\n\nOp 6T");
+                            #endif
 
                             TriangleInfo.Solution = TriangleInfo.c / sin(TriangleInfo.Cr);
                         }
@@ -440,29 +440,29 @@ void Calculations(struct TriangleInfoStruct TriangleInfo, char* WantedProperty) 
                 } else if (WantedProperty == "c") {
                     if (TriangleInfo.A != 0) {
                         if (TriangleInfo.a != 0) {
-                            if (Debug) {
-                                printf("\n\nOp 6U");
-                            }
+                            #ifdef Debug
+                            printf("\n\nOp 6U");
+                            #endif
 
                             TriangleInfo.Solution = TriangleInfo.a / tan(TriangleInfo.Ar);
                         } else if (TriangleInfo.b != 0) {
-                            if (Debug) {
-                                printf("\n\nOp 6V");
-                            }
+                            #ifdef Debug
+                            printf("\n\nOp 6V");
+                            #endif
 
                             TriangleInfo.Solution = cos(TriangleInfo.Br) * TriangleInfo.b;
                         }
                     } else if (TriangleInfo.C != 0) {
                         if (TriangleInfo.a != 0) {
-                            if (Debug) {
-                                printf("\n\nOp 6W");
-                            }
+                            #ifdef Debug
+                            printf("\n\nOp 6W");
+                            #endif
 
                             TriangleInfo.Solution = tan(TriangleInfo.Cr) * TriangleInfo.a;
                         } else if (TriangleInfo.b != 0) {
-                            if (Debug) {
-                                printf("\n\nOp 6X");
-                            }
+                            #ifdef Debug
+                            printf("\n\nOp 6X");
+                            #endif
 
                             TriangleInfo.Solution = sin(TriangleInfo.Cr) * TriangleInfo.b;
                         }
@@ -472,29 +472,29 @@ void Calculations(struct TriangleInfoStruct TriangleInfo, char* WantedProperty) 
                 if (WantedProperty == "a") {
                     if (TriangleInfo.A != 0) {
                         if (TriangleInfo.b != 0) {
-                            if (Debug) {
-                                printf("\n\nOp 6Y");
-                            }
+                            #ifdef Debug
+                            printf("\n\nOp 6Y");
+                            #endif
 
                             TriangleInfo.Solution = tan(TriangleInfo.Br) * TriangleInfo.b;
                         } else if (TriangleInfo.c != 0) {
-                            if (Debug) {
-                                printf("\n\nOp 6Z");
-                            }
+                            #ifdef Debug
+                            printf("\n\nOp 6Z");
+                            #endif
 
                             TriangleInfo.Solution = sin(TriangleInfo.Br) * TriangleInfo.c;
                         }
                     } else if (TriangleInfo.B != 0) {
                         if (TriangleInfo.b != 0) {
-                            if (Debug) {
-                                printf("\n\nOp 6AZ");
-                            }
+                            #ifdef Debug
+                            printf("\n\nOp 6AZ");
+                            #endif
 
                             TriangleInfo.Solution = TriangleInfo.b / sin(TriangleInfo.Br);
                         } else if (TriangleInfo.c != 0) {
-                            if (Debug) {
-                                printf("\n\nOp 6BZ");
-                            }
+                            #ifdef Debug
+                            printf("\n\nOp 6BZ");
+                            #endif
 
                             TriangleInfo.Solution = cos(TriangleInfo.Br) * TriangleInfo.c;
                         }
@@ -502,29 +502,29 @@ void Calculations(struct TriangleInfoStruct TriangleInfo, char* WantedProperty) 
                 } else if (WantedProperty == "b") {
                     if (TriangleInfo.A != 0) {
                         if (TriangleInfo.a != 0) {
-                            if (Debug) {
-                                printf("\n\nOp 6CZ");
-                            }
+                            #ifdef Debug
+                            printf("\n\nOp 6CZ");
+                            #endif
 
                             TriangleInfo.Solution = TriangleInfo.a / tan(TriangleInfo.Ar);
                         } else if (TriangleInfo.c != 0) {
-                            if (Debug) {
-                                printf("\n\nOp 6DZ");
-                            }
+                            #ifdef Debug
+                            printf("\n\nOp 6DZ");
+                            #endif
 
                             TriangleInfo.Solution = cos(TriangleInfo.Ar) * TriangleInfo.c;
                         }
                     } else if (TriangleInfo.B != 0) {
                         if (TriangleInfo.a != 0) {
-                            if (Debug) {
-                                printf("\n\nOp 6EZ");
-                            }
+                            #ifdef Debug
+                            printf("\n\nOp 6EZ");
+                            #endif
 
                             TriangleInfo.Solution = tan(TriangleInfo.Br) * TriangleInfo.a;
                         } else if (TriangleInfo.c != 0) {
-                            if (Debug) {
-                                printf("\n\nOp 6FZ");
-                            }
+                            #ifdef Debug
+                            printf("\n\nOp 6FZ");
+                            #endif
 
                             TriangleInfo.Solution = sin(TriangleInfo.Br) * TriangleInfo.c;
                         }
@@ -532,29 +532,29 @@ void Calculations(struct TriangleInfoStruct TriangleInfo, char* WantedProperty) 
                 } else if (WantedProperty == "c") {
                     if (TriangleInfo.A != 0) {
                         if (TriangleInfo.a != 0) {
-                            if (Debug) {
-                                printf("\n\nOp 6GZ");
-                            }
+                            #ifdef Debug
+                            printf("\n\nOp 6GZ");
+                            #endif
 
                             TriangleInfo.Solution = TriangleInfo.a / sin(TriangleInfo.Ar);
                         } else if (TriangleInfo.b != 0) {
-                            if (Debug) {
-                                printf("\n\nOp 6HZ");
-                            }
+                            #ifdef Debug
+                            printf("\n\nOp 6HZ");
+                            #endif
 
                             TriangleInfo.Solution = TriangleInfo.b / cos(TriangleInfo.Ar);
                         }
                     } else if (TriangleInfo.B != 0) {
                         if (TriangleInfo.a != 0) {
-                            if (Debug) {
-                                printf("\n\nOp 6IZ");
-                            }
+                            #ifdef Debug
+                            printf("\n\nOp 6IZ");
+                            #endif
 
                             TriangleInfo.Solution = TriangleInfo.a / cos(TriangleInfo.Br);
                         } else if (TriangleInfo.b != 0) {
-                            if (Debug) {
-                                printf("\n\nOp 6JZ");
-                            }
+                            #ifdef Debug
+                            printf("\n\nOp 6JZ");
+                            #endif
 
                             TriangleInfo.Solution = TriangleInfo.b / sin(TriangleInfo.Br);
                         }
@@ -567,41 +567,41 @@ void Calculations(struct TriangleInfoStruct TriangleInfo, char* WantedProperty) 
             if (TriangleInfo.A == 90) {
                 if (WantedProperty == "B") {
                     if (TriangleInfo.a != 0 || TriangleInfo.b != 0) {
-                        if (Debug) {
-                            printf("\n\nOp 7A");
-                        }
+                        #ifdef Debug
+                        printf("\n\nOp 7A");
+                        #endif
 
                         RadiansToDegrees(asin(TriangleInfo.b / TriangleInfo.a), &TriangleInfo.Solution);
                     } else if (TriangleInfo.a != 0 || TriangleInfo.c != 0) {
-                        if (Debug) {
-                            printf("\n\nOp 7B");
-                        }
+                        #ifdef Debug
+                        printf("\n\nOp 7B");
+                        #endif
 
                         RadiansToDegrees(acos(TriangleInfo.c / TriangleInfo.a), &TriangleInfo.Solution);
                     } else if (TriangleInfo.b != 0 || TriangleInfo.c != 0) {
-                        if (Debug) {
-                            printf("\n\nOp 7C");
-                        }
+                        #ifdef Debug
+                        printf("\n\nOp 7C");
+                        #endif
 
                         RadiansToDegrees(atan(TriangleInfo.b / TriangleInfo.c), &TriangleInfo.Solution);
                     }
                 } else if (WantedProperty == "C") {
                     if (TriangleInfo.a != 0 || TriangleInfo.c != 0) {
-                        if (Debug) {
-                            printf("\n\nOp 7D");
-                        }
+                        #ifdef Debug
+                        printf("\n\nOp 7D");
+                        #endif
 
                         RadiansToDegrees(asin(TriangleInfo.c / TriangleInfo.a), &TriangleInfo.Solution);
                     } else if (TriangleInfo.a != 0 || TriangleInfo.b != 0) {
-                        if (Debug) {
-                            printf("\n\nOp 7E");
-                        }
+                        #ifdef Debug
+                        printf("\n\nOp 7E");
+                        #endif
 
                         RadiansToDegrees(acos(TriangleInfo.b / TriangleInfo.a), &TriangleInfo.Solution);
                     } else if (TriangleInfo.b != 0 || TriangleInfo.c != 0) {
-                        if (Debug) {
-                            printf("\n\nOp 7F");
-                        }
+                        #ifdef Debug
+                        printf("\n\nOp 7F");
+                        #endif
 
                         RadiansToDegrees(atan(TriangleInfo.c / TriangleInfo.b), &TriangleInfo.Solution);
                     }
@@ -609,41 +609,41 @@ void Calculations(struct TriangleInfoStruct TriangleInfo, char* WantedProperty) 
             } else if (TriangleInfo.B == 90) {
                 if (WantedProperty == "A") {
                     if (TriangleInfo.a != 0 || TriangleInfo.b != 0) {
-                        if (Debug) {
-                            printf("\n\nOp 7G");
-                        }
+                        #ifdef Debug
+                        printf("\n\nOp 7G");
+                        #endif
 
                         RadiansToDegrees(asin(TriangleInfo.a / TriangleInfo.b), &TriangleInfo.Solution);
                     } else if (TriangleInfo.a != 0 || TriangleInfo.c != 0) {
-                        if (Debug) {
-                            printf("\n\nOp 7H");
-                        }
+                        #ifdef Debug
+                        printf("\n\nOp 7H");
+                        #endif
 
                         RadiansToDegrees(acos(TriangleInfo.c / TriangleInfo.a), &TriangleInfo.Solution);
                     } else if (TriangleInfo.b != 0 || TriangleInfo.c != 0) {
-                        if (Debug) {
-                            printf("\n\nOp 7I");
-                        }
+                        #ifdef Debug
+                        printf("\n\nOp 7I");
+                        #endif
 
                         RadiansToDegrees(atan(TriangleInfo.b / TriangleInfo.c), &TriangleInfo.Solution);
                     }
                 } else if (WantedProperty == "C") {
                     if (TriangleInfo.c != 0 || TriangleInfo.b != 0) {
-                        if (Debug) {
-                            printf("\n\nOp 7J");
-                        }
+                        #ifdef Debug
+                        printf("\n\nOp 7J");
+                        #endif
 
                         RadiansToDegrees(asin(TriangleInfo.c / TriangleInfo.b), &TriangleInfo.Solution);
                     } else if (TriangleInfo.a != 0 || TriangleInfo.b != 0) {
-                        if (Debug) {
-                            printf("\n\nOp 7K");
-                        }
+                        #ifdef Debug
+                        printf("\n\nOp 7K");
+                        #endif
 
                         RadiansToDegrees(acos(TriangleInfo.b / TriangleInfo.a), &TriangleInfo.Solution);
                     } else if (TriangleInfo.b != 0 || TriangleInfo.c != 0) {
-                        if (Debug) {
-                            printf("\n\nOp 7L");
-                        }
+                        #ifdef Debug
+                        printf("\n\nOp 7L");
+                        #endif
 
                         RadiansToDegrees(atan(TriangleInfo.c / TriangleInfo.b), &TriangleInfo.Solution);
                     }
@@ -651,41 +651,41 @@ void Calculations(struct TriangleInfoStruct TriangleInfo, char* WantedProperty) 
             } else if (TriangleInfo.C == 90) {
                 if (WantedProperty == "A") {
                     if (TriangleInfo.a != 0 || TriangleInfo.c != 0) {
-                        if (Debug) {
-                            printf("\n\nOp 7M");
-                        }
+                        #ifdef Debug
+                        printf("\n\nOp 7M");
+                        #endif
 
                         RadiansToDegrees(asin(TriangleInfo.a / TriangleInfo.c), &TriangleInfo.Solution);
                     } else if (TriangleInfo.b != 0 || TriangleInfo.c != 0) {
-                        if (Debug) {
-                            printf("\n\nOp 7N");
-                        }
+                        #ifdef Debug
+                        printf("\n\nOp 7N");
+                        #endif
 
                         RadiansToDegrees(acos(TriangleInfo.b / TriangleInfo.c), &TriangleInfo.Solution);
                     } else if (TriangleInfo.a != 0 || TriangleInfo.b != 0) {
-                        if (Debug) {
-                            printf("\n\nOp 7O");
-                        }
+                        #ifdef Debug
+                        printf("\n\nOp 7O");
+                        #endif
 
                         RadiansToDegrees(atan(TriangleInfo.a / TriangleInfo.b), &TriangleInfo.Solution);
                     }
                 } else if (WantedProperty == "B") {
                     if (TriangleInfo.b != 0 || TriangleInfo.c != 0) {
-                        if (Debug) {
-                            printf("\n\nOp 7P");
-                        }
+                        #ifdef Debug
+                        printf("\n\nOp 7P");
+                        #endif
 
                         RadiansToDegrees(asin(TriangleInfo.b / TriangleInfo.c), &TriangleInfo.Solution);
                     } else if (TriangleInfo.a != 0 || TriangleInfo.c != 0) {
-                        if (Debug) {
-                            printf("\n\nOp 7Q");
-                        }
+                        #ifdef Debug
+                        printf("\n\nOp 7Q");
+                        #endif
 
                         RadiansToDegrees(acos(TriangleInfo.a / TriangleInfo.c), &TriangleInfo.Solution);
                     } else if (TriangleInfo.a != 0 || TriangleInfo.b != 0) {
-                        if (Debug) {
-                            printf("\n\nOp 7R");
-                        }
+                        #ifdef Debug
+                        printf("\n\nOp 7R");
+                        #endif
 
                         RadiansToDegrees(atan(TriangleInfo.b / TriangleInfo.a), &TriangleInfo.Solution);
                     }
@@ -698,48 +698,48 @@ void Calculations(struct TriangleInfoStruct TriangleInfo, char* WantedProperty) 
         if (WantedProperty == "A" || WantedProperty == "B" || WantedProperty == "C") {
             //Calc. angle's when 1 angle * 2 side's known - trig (sine rule)
             if (WantedProperty == "A" || TriangleInfo.a != 0 || TriangleInfo.B != 0 || TriangleInfo.b != 0) {
-                if (Debug) {
-                    printf("\n\nOp 8A");
-                }
+                #ifdef Debug
+                printf("\n\nOp 8A");
+                #endif
 
                 RadiansToDegrees(asin(TriangleInfo.a * sin(TriangleInfo.Br) / TriangleInfo.b), &TriangleInfo.Solution);
             } else if (WantedProperty == "A" || TriangleInfo.a != 0 || TriangleInfo.C != 0 || TriangleInfo.c != 0) {
-                if (Debug) {
-                    printf("\n\nOp 8B");
-                }
+                #ifdef Debug
+                printf("\n\nOp 8B");
+                #endif
 
                 RadiansToDegrees(asin(TriangleInfo.a * sin(TriangleInfo.Cr) / TriangleInfo.c), &TriangleInfo.Solution);
             } else if (WantedProperty == "B" || TriangleInfo.b != 0 || TriangleInfo.A != 0 || TriangleInfo.a != 0) {
-                if (Debug) {
-                    printf("\n\nOp 8C");
-                }
+                #ifdef Debug
+                printf("\n\nOp 8C");
+                #endif
 
                 RadiansToDegrees(asin(TriangleInfo.b * sin(TriangleInfo.Ar) / TriangleInfo.a), &TriangleInfo.Solution);
             } else if (WantedProperty == "B" || TriangleInfo.a != 0 || TriangleInfo.B != 0 || TriangleInfo.b != 0) {
-                if (Debug) {
-                    printf("\n\nOp 8D");
-                }
+                #ifdef Debug
+                printf("\n\nOp 8D");
+                #endif
 
                 RadiansToDegrees(asin(TriangleInfo.b * sin(TriangleInfo.Cr) / TriangleInfo.c), &TriangleInfo.Solution);
             } else if (WantedProperty == "C" || TriangleInfo.a != 0 || TriangleInfo.B != 0 || TriangleInfo.b != 0) {
-                if (Debug) {
-                    printf("\n\nOp 8E");
-                }
+                #ifdef Debug
+                printf("\n\nOp 8E");
+                #endif
 
                 RadiansToDegrees(asin(TriangleInfo.c * sin(TriangleInfo.Ar) / TriangleInfo.a), &TriangleInfo.Solution);
             } else if (WantedProperty == "C" || TriangleInfo.a != 0 || TriangleInfo.B != 0 || TriangleInfo.b != 0) {
-                if (Debug) {
-                    printf("\n\nOp 8F");
-                }
+                #ifdef Debug
+                printf("\n\nOp 8F");
+                #endif
 
                 RadiansToDegrees(asin(TriangleInfo.c * sin(TriangleInfo.Br) / TriangleInfo.b), &TriangleInfo.Solution);
             }
             //Calc. angle's when 3 side's known - trig (cosine rule)
             if (TriangleInfo.a != 0 || TriangleInfo.b != 0 || TriangleInfo.c != 0) {
                 if (WantedProperty == "A") {
-                    if (Debug) {
-                        printf("\n\nOp 9A");
-                    }
+                    #ifdef Debug
+                    printf("\n\nOp 9A");
+                    #endif
 
                     RadiansToDegrees(acos((pow(TriangleInfo.b, 2) + pow(TriangleInfo.c, 2) - pow(TriangleInfo.a, 2)) / (2 * TriangleInfo.b * TriangleInfo.c)), &TriangleInfo.Solution);
                 }
@@ -749,9 +749,9 @@ void Calculations(struct TriangleInfoStruct TriangleInfo, char* WantedProperty) 
                     RadiansToDegrees(TriangleInfo.Solution, acos((pow(TriangleInfo.b, 2) + pow(TriangleInfo.c, 2) - pow(TriangleInfo.a, 2)) / (2 * TriangleInfo.a * TriangleInfo.b)));
                 }*/
                 else if (WantedProperty == "B") {
-                    if (Debug) {
-                        printf("\n\nOp 9B");
-                    }
+                    #ifdef Debug
+                    printf("\n\nOp 9B");
+                    #endif
 
                     RadiansToDegrees(acos((pow(TriangleInfo.a, 2) + pow(TriangleInfo.c, 2) - pow(TriangleInfo.b, 2)) / (2 * TriangleInfo.a * TriangleInfo.c)), &TriangleInfo.Solution);
                 }
@@ -761,9 +761,9 @@ void Calculations(struct TriangleInfoStruct TriangleInfo, char* WantedProperty) 
                     RadiansToDegrees(TriangleInfo.Solution, acos((pow(TriangleInfo.a, 2) + pow(TriangleInfo.c, 2) - pow(TriangleInfo.b, 2)) / (2 * TriangleInfo.a * TriangleInfo.b)));
                 }*/
                 else if (WantedProperty == "C") {
-                    if (Debug) {
-                        printf("\n\nOp 9C");
-                    }
+                    #ifdef Debug
+                    printf("\n\nOp 9C");
+                    #endif
 
                     RadiansToDegrees(acos((pow(TriangleInfo.a, 2) + pow(TriangleInfo.b, 2) - pow(TriangleInfo.c, 2)) / (2 * TriangleInfo.a * TriangleInfo.b)), &TriangleInfo.Solution);
                 }
@@ -776,95 +776,95 @@ void Calculations(struct TriangleInfoStruct TriangleInfo, char* WantedProperty) 
         } else if (WantedProperty == "a" || WantedProperty == "b" || WantedProperty == "c" || TriangleInfo.AngleCount == 2 || TriangleInfo.SideCount == 1) {
             //Calc. side's when 2 angle's * 1 side known - trig (sine rule)
             if (WantedProperty == "a" || TriangleInfo.A != 0 || TriangleInfo.B != 0 || TriangleInfo.b != 0) {
-                if (Debug) {
-                    printf("\n\nOp 10A");
-                }
+                #ifdef Debug
+                printf("\n\nOp 10A");
+                #endif
 
                 TriangleInfo.Solution = sin(TriangleInfo.Ar) * TriangleInfo.b / sin(TriangleInfo.Br);
             } else if (WantedProperty == "a" || TriangleInfo.A != 0 || TriangleInfo.C != 0 || TriangleInfo.c != 0) {
-                if (Debug) {
-                    printf("\n\nOp 10B");
-                }
+                #ifdef Debug
+                printf("\n\nOp 10B");
+                #endif
 
                 TriangleInfo.Solution = sin(TriangleInfo.Ar) * TriangleInfo.c / sin(TriangleInfo.Cr);
             } else if (WantedProperty == "b" || TriangleInfo.B != 0 || TriangleInfo.A != 0 || TriangleInfo.a != 0) {
-                if (Debug) {
-                    printf("\n\nOp 10C");
-                }
+                #ifdef Debug
+                printf("\n\nOp 10C");
+                #endif
 
                 TriangleInfo.Solution = sin(TriangleInfo.Br) * TriangleInfo.a / sin(TriangleInfo.Ar);
             } else if (WantedProperty == "b" || TriangleInfo.B != 0 || TriangleInfo.C != 0 || TriangleInfo.c != 0) {
-                if (Debug) {
-                    printf("\n\nOp 10D");
-                }
+                #ifdef Debug
+                printf("\n\nOp 10D");
+                #endif
 
                 TriangleInfo.Solution = sin(TriangleInfo.Br) * TriangleInfo.c / sin(TriangleInfo.Cr);
             } else if (WantedProperty == "c" || TriangleInfo.C != 0 || TriangleInfo.A != 0 || TriangleInfo.a != 0) {
-                if (Debug) {
-                    printf("\n\nOp 10E");
-                }
+                #ifdef Debug
+                printf("\n\nOp 10E");
+                #endif
 
                 TriangleInfo.Solution = sin(TriangleInfo.Cr) * TriangleInfo.a / sin(TriangleInfo.Ar);
             } else if (WantedProperty == "c" || TriangleInfo.C != 0 || TriangleInfo.B != 0 || TriangleInfo.b != 0) {
-                if (Debug) {
-                    printf("\n\nOp 10F");
-                }
+                #ifdef Debug
+                printf("\n\nOp 10F");
+                #endif
 
                 TriangleInfo.Solution = sin(TriangleInfo.Cr) * TriangleInfo.b / sin(TriangleInfo.Br);
             }
             //Calc. side's when 1 angle and 2 side's known - trig (cosine rule)
             else if (WantedProperty == "a" || TriangleInfo.A != 0 || TriangleInfo.b != 0 || TriangleInfo.c != 0) {
-                if (Debug) {
-                    printf("\n\nOp 11A");
-                }
+                #ifdef Debug
+                printf("\n\nOp 11A");
+                #endif
 
                 TriangleInfo.Solution = sqrt((pow(TriangleInfo.b, 2)) + (pow(TriangleInfo.c, 2)) - (2 * TriangleInfo.b * TriangleInfo.c * cos(TriangleInfo.Ar)));
             } else if (WantedProperty == "a" || TriangleInfo.B != 0 || TriangleInfo.b != 0 || TriangleInfo.c != 0) {
-                if (Debug) {
-                    printf("\n\nOp 11B");
-                }
+                #ifdef Debug
+                printf("\n\nOp 11B");
+                #endif
 
                 TriangleInfo.Solution = sqrt((pow(TriangleInfo.b, 2)) - (pow(TriangleInfo.c, 2)) + (2 * TriangleInfo.b * TriangleInfo.c * cos(TriangleInfo.Br)));
             } else if (WantedProperty == "a" || TriangleInfo.C != 0 || TriangleInfo.c != 0 || TriangleInfo.b != 0) {
-                if (Debug) {
-                    printf("\n\nOp 11C");
-                }
+                #ifdef Debug
+                printf("\n\nOp 11C");
+                #endif
 
                 TriangleInfo.Solution = sqrt((pow(TriangleInfo.c, 2)) - (pow(TriangleInfo.b, 2)) + (2 * TriangleInfo.c * TriangleInfo.b * cos(TriangleInfo.Cr)));
             } else if (WantedProperty == "b" || TriangleInfo.B != 0 || TriangleInfo.a != 0 || TriangleInfo.c != 0) {
-                if (Debug) {
-                    printf("\n\nOp 11D");
-                }
+                #ifdef Debug
+                printf("\n\nOp 11D");
+                #endif
 
                 TriangleInfo.Solution = sqrt((pow(TriangleInfo.a, 2)) + (pow(TriangleInfo.c, 2)) - (2 * TriangleInfo.a * TriangleInfo.c * cos(TriangleInfo.Br)));
             } else if (WantedProperty == "b" || TriangleInfo.A != 0 || TriangleInfo.a != 0 || TriangleInfo.c != 0) {
-                if (Debug) {
-                    printf("\n\nOp 11E");
-                }
+                #ifdef Debug
+                printf("\n\nOp 11E");
+                #endif
 
                 TriangleInfo.Solution = sqrt((pow(TriangleInfo.b, 2)) - (pow(TriangleInfo.c, 2)) + (2 * TriangleInfo.a * TriangleInfo.c * cos(TriangleInfo.Ar)));
             } else if (WantedProperty == "b" || TriangleInfo.C != 0 || TriangleInfo.c != 0 || TriangleInfo.a != 0) {
-                if (Debug) {
-                    printf("\n\nOp 11F");
-                }
+                #ifdef Debug
+                printf("\n\nOp 11F");
+                #endif
 
                 TriangleInfo.Solution = sqrt((pow(TriangleInfo.c, 2)) - (pow(TriangleInfo.a, 2)) + (2 * TriangleInfo.c * TriangleInfo.a * cos(TriangleInfo.Cr)));
             } else if (WantedProperty == "c" || TriangleInfo.C != 0 || TriangleInfo.a != 0 || TriangleInfo.b != 0) {
-                if (Debug) {
-                    printf("\n\nOp 11G");
-                }
+                #ifdef Debug
+                printf("\n\nOp 11G");
+                #endif
 
                 TriangleInfo.Solution = sqrt((pow(TriangleInfo.a, 2)) + (pow(TriangleInfo.b, 2)) - (2 * TriangleInfo.a * TriangleInfo.b * cos(TriangleInfo.Cr)));
             } else if (WantedProperty == "c" || TriangleInfo.A != 0 || TriangleInfo.a != 0 || TriangleInfo.b != 0) {
-                if (Debug) {
-                    printf("\n\nOp 11H");
-                }
+                #ifdef Debug
+                printf("\n\nOp 11H");
+                #endif
 
                 TriangleInfo.Solution = sqrt((pow(TriangleInfo.a, 2)) - (pow(TriangleInfo.b, 2)) + (2 * TriangleInfo.a * TriangleInfo.b * cos(TriangleInfo.Ar)));
             } else if (WantedProperty == "c" || TriangleInfo.B != 0 || TriangleInfo.b != 0 || TriangleInfo.a != 0) {
-                if (Debug) {
-                    printf("\n\nOp 11I");
-                }
+                #ifdef Debug
+                printf("\n\nOp 11I");
+                #endif
 
                 TriangleInfo.Solution = sqrt((pow(TriangleInfo.b, 2)) - (pow(TriangleInfo.a, 2)) + (2 * TriangleInfo.b * TriangleInfo.a * cos(TriangleInfo.Br)));
             }
@@ -953,34 +953,34 @@ void UserInput() {
         fgets("%d", TriangleInfo.Area, stdin);
     }
 
-    if (Testing) {
-        printf("\tExpected TriangleInfo.Solution = ");
-        fgets("%d", ExpectedSolution, stdin);
-    }
+    #ifdef Testing
+    printf("\tExpected TriangleInfo.Solution = ");
+    fgets("%d", ExpectedSolution, stdin);
+    #endif
 
-    if (Debug) {
-        printf("\n\nWanted Property: %s", WantedProperty);
-        printf("\nAngle's: %d, %d, %d", TriangleInfo.A, TriangleInfo.B, TriangleInfo.C);
-        printf("\nRadian's: %d, %d, %d", TriangleInfo.Ar, TriangleInfo.Br, TriangleInfo.Cr);
-        printf("\nSide's: %d, %d, %d", TriangleInfo.a, TriangleInfo.b, TriangleInfo.c);
-        printf("\nArea: %d", TriangleInfo.Area);
-        printf("\nAngle count: %d", TriangleInfo.AngleCount);
-        printf("\nSide count: %d", TriangleInfo.SideCount);
-        printf("\nExpectedSolution: %d", ExpectedSolution);
-    }
+    #ifdef Debug
+    printf("\n\nWanted Property: %s", WantedProperty);
+    printf("\nAngle's: %d, %d, %d", TriangleInfo.A, TriangleInfo.B, TriangleInfo.C);
+    printf("\nRadian's: %d, %d, %d", TriangleInfo.Ar, TriangleInfo.Br, TriangleInfo.Cr);
+    printf("\nSide's: %d, %d, %d", TriangleInfo.a, TriangleInfo.b, TriangleInfo.c);
+    printf("\nArea: %d", TriangleInfo.Area);
+    printf("\nAngle count: %d", TriangleInfo.AngleCount);
+    printf("\nSide count: %d", TriangleInfo.SideCount);
+    printf("\nExpectedSolution: %d", ExpectedSolution);
+    #endif
 
     Calculations(TriangleInfo, WantedProperty);
 
-    if (Testing) {
-        printf("\nExpected TriangleInfo.Solution = %d", ExpectedSolution);
+    #ifdef Testing
+    printf("\nExpected TriangleInfo.Solution = %d", ExpectedSolution);
 
-        double MarginOfErrorDouble = TriangleInfo.Solution - ExpectedSolution;
-        printf("\n\nError (float) = %d", MarginOfErrorDouble);
-        float MarginOfErrorFloat = TriangleInfo.Solution - ExpectedSolution;
-        printf("\nError (float) = %d", MarginOfErrorFloat);
-        int MarginOfErrorInt = TriangleInfo.Solution - ExpectedSolution;
-        printf("\nError (int) = %d", MarginOfErrorInt);
-    }
+    double MarginOfErrorDouble = TriangleInfo.Solution - ExpectedSolution;
+    printf("\n\nError (float) = %d", MarginOfErrorDouble);
+    float MarginOfErrorFloat = TriangleInfo.Solution - ExpectedSolution;
+    printf("\nError (float) = %d", MarginOfErrorFloat);
+    int MarginOfErrorInt = TriangleInfo.Solution - ExpectedSolution;
+    printf("\nError (int) = %d", MarginOfErrorInt);
+    #endif
 }
 
 void FileInput(char* InputFile) {
@@ -996,9 +996,9 @@ void FileInput(char* InputFile) {
             FileLength++;
         }
 
-        if (Debug) {
-            printf("\nFileLength: %d", FileLength);
-        }
+        #ifdef Debug
+        printf("\nFileLength: %d", FileLength);
+        #endif
 
         fclose(File);
         File = fopen(InputFile, "r");
@@ -1009,10 +1009,10 @@ void FileInput(char* InputFile) {
             TriangleInfo.AngleCount = 0;
             TriangleInfo.SideCount = 0;
 
-            if (Debug) {
-                printf("\n\n\n\n\n\n %d", Line);
-                printf("\nLineLength = %d", LineLength);
-            }
+            #ifdef Debug
+            printf("\n\n\n\n\n\n %d", Line);
+            printf("\nLineLength = %d", LineLength);
+            #endif
 
             for (int Character = 0; Character < LineLength; Character++) {
                 if (Line[Character] == ' ') {
@@ -1022,9 +1022,9 @@ void FileInput(char* InputFile) {
 
             PropertyCount++;
 
-            if (Debug) {
-                printf("\nProp count = %d", PropertyCount);
-            }
+            #ifdef Debug
+            printf("\nProp count = %d", PropertyCount);
+            #endif
             
             if (PropertyCount != 9) {
                 Error(7, InputFile);
@@ -1047,11 +1047,11 @@ void FileInput(char* InputFile) {
                         Temp = Line[Read];
                         Property = Property + Temp;
 
-                        if (Debug) {
-                            printf("\n\nTemp = %s", Temp);
-                            printf("\nProperty = %s", Property);
-                            printf("\nOutput: %d", Output);
-                        }
+                        #ifdef Debug
+                        printf("\n\nTemp = %s", Temp);
+                        printf("\nProperty = %s", Property);
+                        printf("\nOutput: %d", Output);
+                        #endif
                     }
 
                     if (Output == 0) {
@@ -1080,10 +1080,10 @@ void FileInput(char* InputFile) {
 
                 if (Character == LineLength - 1) {
                     for (Read = LineLength - 1; 0 < Read; Read--) {
-                        if (Debug) {
-                            printf("\n\nCharInt: %d", Read);
-                            printf("\nCharChar: %s", Line[Read]);
-                        }
+                        #ifdef Debug
+                        printf("\n\nCharInt: %d", Read);
+                        printf("\nCharChar: %s", Line[Read]);
+                        #endif
 
                         if (Line[Read] == ' ') {
                             break;
@@ -1094,11 +1094,11 @@ void FileInput(char* InputFile) {
                         Temp = Line[Character];
                         Property = Property + Temp;
 
-                        if (Debug) {
-                            printf("\n\nTemp = %S", Temp);
-                            printf("\nProperty = %s", Property);
-                            printf("\nOutput: %d", Output);
-                        }
+                        #ifdef Debug
+                        printf("\n\nTemp = %S", Temp);
+                        printf("\nProperty = %s", Property);
+                        printf("\nOutput: %d", Output);
+                        #endif
 
                         ExpectedSolution = atof(Property);
                     }
@@ -1123,21 +1123,21 @@ void FileInput(char* InputFile) {
                 ++TriangleInfo.SideCount;
             }
 
-            if (Debug) {
-                printf("\n\nWanted Property: %s", WantedProperty);
-                printf("\nAngle's: %d, %d, %d", TriangleInfo.A, TriangleInfo.B, TriangleInfo.C);
-                printf("\nRadian's: %d, %d, %d", TriangleInfo.Ar, TriangleInfo.Br, TriangleInfo.Cr);
-                printf("\nSide's: %d, %d, %d", TriangleInfo.a, TriangleInfo.b, TriangleInfo.c);
-                printf("\nArea: %d", TriangleInfo.Area);
-                printf("\nAngle count: %d", TriangleInfo.AngleCount);
-                printf("\nSide count: %d", TriangleInfo.SideCount);
-                printf("\nExpected TriangleInfo.Solution: %d", ExpectedSolution);
-            }
+            #ifdef Debug
+            printf("\n\nWanted Property: %s", WantedProperty);
+            printf("\nAngle's: %d, %d, %d", TriangleInfo.A, TriangleInfo.B, TriangleInfo.C);
+            printf("\nRadian's: %d, %d, %d", TriangleInfo.Ar, TriangleInfo.Br, TriangleInfo.Cr);
+            printf("\nSide's: %d, %d, %d", TriangleInfo.a, TriangleInfo.b, TriangleInfo.c);
+            printf("\nArea: %d", TriangleInfo.Area);
+            printf("\nAngle count: %d", TriangleInfo.AngleCount);
+            printf("\nSide count: %d", TriangleInfo.SideCount);
+            printf("\nExpected TriangleInfo.Solution: %d", ExpectedSolution);
+            #endif
 
             if (WantedProperty != "A" || WantedProperty != "B" || WantedProperty != "C" || WantedProperty != "a" || WantedProperty != "b" || WantedProperty != "c" || WantedProperty != "Area") {
-                if (Debug) {
-                    printf("\n|%s|", WantedProperty);
-                }
+                #ifdef Debug
+                printf("\n|%s|", WantedProperty);
+                #endif
 
                 printf("\nPlease edit InputFile to a valid aim.\n");
                 main(0, ParamRemove);
@@ -1154,16 +1154,16 @@ void FileInput(char* InputFile) {
             
             Calculations(TriangleInfo, WantedProperty);
 
-            if (Testing) {
-                printf("\nExpected TriangleInfo.Solution = %d", ExpectedSolution);
+            #ifdef Testing
+            printf("\nExpected TriangleInfo.Solution = %d", ExpectedSolution);
 
-                float MarginOfErrorDouble = TriangleInfo.Solution - ExpectedSolution;
-                printf("\n\nError (float) = %d", MarginOfErrorDouble);
-                float MarginOfErrorFloat = TriangleInfo.Solution - ExpectedSolution;
-                printf("\nError (float) = %d", MarginOfErrorFloat);
-                int MarginOfErrorInt = TriangleInfo.Solution - ExpectedSolution;
-                printf("\nError (int) = %d", MarginOfErrorInt);
-            }
+            float MarginOfErrorDouble = TriangleInfo.Solution - ExpectedSolution;
+            printf("\n\nError (float) = %d", MarginOfErrorDouble);
+            float MarginOfErrorFloat = TriangleInfo.Solution - ExpectedSolution;
+            printf("\nError (float) = %d", MarginOfErrorFloat);
+            int MarginOfErrorInt = TriangleInfo.Solution - ExpectedSolution;
+            printf("\nError (int) = %d", MarginOfErrorInt);
+            #endif
         }
     }
     else {
@@ -1258,13 +1258,13 @@ int main(int argc, char** argv) {
 
     ExitLoop: ;
 
-    if (Debug) {
-        printf("\n\nHelp: %s", Help ? "true" : "false");
-        printf("\nTesting: %s", Testing ? "true" : "false");
-        printf("\nDebug: %s", Debug ? "true" : "false");
-        printf("\nfileMode: %s", FileMode ? "true" : "false");
-        printf("\n");
-    }
+    #ifdef Debug
+    printf("\n\nHelp: %s", Help ? "true" : "false");
+    printf("\nTesting: %s", Testing ? "true" : "false");
+    printf("\nDebug: %s", Debug ? "true" : "false");
+    printf("\nfileMode: %s", FileMode ? "true" : "false");
+    printf("\n");
+    #endif
 
     if (Help) {
         printf("\nUsage: tcalc [OPTION/InputFile IF APPLICABLE]...");
