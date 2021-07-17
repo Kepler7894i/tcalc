@@ -1,109 +1,110 @@
-#include <iostream>
+#include <stdio.h>
 #include <math.h>
 #include <fstream>
-#include <string>
+//#include <string>
 
 #ifndef _WIN32
 #include <unistd.h>
 #endif
 
+#define PI 3.1415;
+
 int main(int argc, char** argv);
-void userInput();
-void fileInput(std::string file);
+void UserInput();
+void FileInput(char* File);
 
-const double pi = 3.14159;
-char** param_remove;
+char** ParamRemove;
 
-bool debug = false, testing = false, right_angled = false;
+bool Debug = false, Testing = false, RightAngled = false;
 
-class Triangle {
+struct Triangle {
     public:
         double A = 0, B = 0, C = 0, Ar = 0, Br = 0, Cr = 0, a = 0, b = 0, c = 0, Area = 0;
-        int angle_count = 0, side_count = 0;
+        int AngleCount = 0, SideCount = 0;
 };
 
-double ans = 0;
+double Ans = 0;
 
-void degrees_radians(double& degrees, double& radians) {
-    radians = (degrees * pi) / 180;
+void DegreesToRadians(double& Degrees, double& Radians) {
+    Radians = (Degrees * pi) / 180;
 }
 
-void radians_degrees(double radians, double& degrees) {
-    degrees = (radians * 180) / pi;
+void RadiansToDegrees(double Radians, double& Degrees) {
+    Degrees = (Radians * 180) / pi;
 }
 
-void error(int error_num, std::string action) {
-    switch (error_num) {
+void Error(int ErrorNum, char* Action) {
+    switch (ErrorNum) {
         case 1: {
-            std::cout << "\n\nError: Angles !<= 180 degree.";
-        }
-        case 2: {
-            std::cout << "\n\nError: " << action << " is incalculabe with information provided.";
-            break;
-        }
-        case 3: {
-            std::cout << "\n\nError: Two sides cannot be 0.\n\n";
-            break;
-        }
-        case 4: {
-            std::cout << "\n\nOne or more inputted values is incorrect compared to other values.";
-            userInput();
-            break;
-        }
-        case 5: {
-            std::cout << "\n\nError: Failed to open " << action << "\nFile to read from: ";
-            std::string file;
-            std::cin >> file;
-            fileInput(file);
-            break;
-        }
-        case 6: {
-            int fixed;
+            printf("\n\nError: Angles !<= 180 degree.");
+        
+	} case 2: {
+            printf("\n\nError: " << action << " is incalculabe with information provided.");
+            
+	    break;
+        
+	} case 3: {
+            printf("\n\nError: Two sides cannot be 0.\n\n");
+            
+	    break;
+        
+	} case 4: {
+            printf("\n\nOne or more inputted values is incorrect compared to other values.");
+            UserInput();
+            
+	    break;
+        
+	} case 5: {
+            printf("\n\nError: Failed to open " << action << "\nFile to read from: ");
+            char* File;
+            std::cin >> File;
+            FileInput(File);
+        
+	    break;
+        
+	} case 6: {
+            int Fixed;
 
-            std::cout << "\n\nError: Incorrect angles in file." << "\nFixed? ";
-            std::cin >> fixed;
+            printf("\n\nError: Incorrect angles in file." << "\nFixed? ");
+            std::cin >> Fixed;
 
-            if (fixed == 1) {
-                fileInput(action);
-            }
-            else if (fixed == 0) {
+            if (Fixed == 1) {
+                FileInput(Action);
+            } else if (Fixed == 0) {
                 return;
-            }
-            else {
-                std::cout << "Enter 1 or 0.";
-                error(6, action);
+
+            } else {
+                printf("Enter 1 or 0.");
+                Error(6, Action);
             }
 
             break;
-        }
-        case 7: {
-            int fixed;
 
-            std::cout << "\n\nError: Incorrect number of properties in file. Fixed? ";
-            std::cout << "\n\n       Correct layout:";
-            std::cout << "\n         wanted_property A B C a b c Area expected_ans - Spaces between the values";
-            std::cout << "\n                                                       - Capital letters are angles, lowercase letters are sides";
-            std::cout << "\n                                                       - Opposite angles and sides should be the same letter";
-            std::cout << "\n\nFixed? ";
-            std::cin >> fixed;
+        } case 7: {
+            int Fixed;
 
-            if (fixed == 1) {
-                fileInput(action);
-            }
-            else if (fixed == 0) {
+            printf("\n\nError: Incorrect number of properties in file. Fixed? ");
+            printf("\n\n       Correct layout:");
+            printf("\n         wanted_property A B C a b c Area expected_ans - Spaces between the values");
+            printf("\n                                                       - Capital letters are angles, lowercase letters are sides");
+            printf("\n                                                       - Opposite angles and sides should be the same letter");
+            printf("\n\nFixed? ");
+            std::cin >> Fixed;
+
+            if (Fixed == 1) {
+                FileInput(Action);
+            } else if (Fixed == 0) {
                 return;
+            
+	    } else {
+                printf("\nEnter 1 or 0.");
+                Error(7, Action);
             }
-            else {
-                std::cout << "\nEnter 1 or 0.";
-                error(7, action);
-            }
-        }
-        case 8: {
-            if (debug) {
-                std::cout << "\n\nError: Invalid parameter " << action << " for tcalc.";
-            }
-            else {
-                std::cout << "\n\nError: Invalid parameter for tcalc.";
+        } case 8: {
+            if (Debug) {
+                printf("\n\nError: Invalid parameter " << action << " for tcalc.");
+            } else {
+                printf("\n\nError: Invalid parameter for tcalc.");
             }
 
             exit(1);
@@ -111,7 +112,7 @@ void error(int error_num, std::string action) {
     }
 }
 
-void calculations(Triangle& Info, std::string x) {
+void Calculations(Triangle& Info, char* x) {
     if (debug) {
         std::cout << "\n\nWanted prop: " << x;
         std::cout << "\nAngle's: " << Info.A << ", " << Info.B << ", " << Info.C;
@@ -129,15 +130,13 @@ void calculations(Triangle& Info, std::string x) {
         }
 
         ans = 180 - Info.B - Info.C;
-    }
-    else if (x == "B" && Info.A != 0 && Info.C != 0) {
+    } else if (x == "B" && Info.A != 0 && Info.C != 0) {
         if (debug) {
             std::cout << "\n\nOp 1B";
         }
 
         ans = 180 - Info.A - Info.C;
-    }
-    else if (x == "C" && Info.B != 0 && Info.A != 0) {
+    } else if (x == "C" && Info.B != 0 && Info.A != 0) {
         if (debug) {
             std::cout << "\n\nOp 1C";
         }
@@ -184,8 +183,7 @@ void calculations(Triangle& Info, std::string x) {
 
             ans = Info.Area / (0.5 * Info.c * sin(Info.Br));
         }
-    }
-    else if (x == "b" && Info.Area != 0 && ((Info.a != 0 && Info.C != 0) || (Info.c != 0 && Info.A != 0))) {
+    } else if (x == "b" && Info.Area != 0 && ((Info.a != 0 && Info.C != 0) || (Info.c != 0 && Info.A != 0))) {
         if (Info.a != 0 && Info.C != 0) {
             if (debug) {
                 std::cout << "\n\nOp 3C";
@@ -200,8 +198,7 @@ void calculations(Triangle& Info, std::string x) {
 
             ans = Info.Area / (0.5 * Info.c * sin(Info.Ar));
         }
-    }
-    else if (x == "c" && Info.Area != 0 && ((Info.b != 0 && Info.A != 0) || (Info.a != 0 && Info.B != 0))) {
+    } else if (x == "c" && Info.Area != 0 && ((Info.b != 0 && Info.A != 0) || (Info.a != 0 && Info.B != 0))) {
         if (Info.b != 0 && Info.C != 0) {
             if (debug) {
                 std::cout << "\n\nOp 3E";
@@ -224,22 +221,19 @@ void calculations(Triangle& Info, std::string x) {
         }
 
         ans = asin(Info.Area / (0.5 * Info.b * Info.c));
-    }
-    else if (x == "B" && Info.Area != 0 && Info.a != 0 && Info.c != 0) {
+    } else if (x == "B" && Info.Area != 0 && Info.a != 0 && Info.c != 0) {
         if (debug) {
             std::cout << "\n\nOp 4B";
         }
 
         ans = asin(Info.Area / (0.5 * Info.a * Info.c));
-    }
-    else if (x == "A" && Info.Area != 0 && Info.a != 0 && Info.b != 0) {
+    } else if (x == "A" && Info.Area != 0 && Info.a != 0 && Info.b != 0) {
         if (debug) {
             std::cout << "\n\nOp 4C";
         }
 
         ans = asin(Info.Area / (0.5 * Info.a * Info.b));
-    }
-    else if ((Info.A == 90 || Info.B == 90 || Info.C == 90) && (x == "a" || x == "b" || x == "c") && Info.side_count == 2) {
+    } else if ((Info.A == 90 || Info.B == 90 || Info.C == 90) && (x == "a" || x == "b" || x == "c") && Info.side_count == 2) {
         //Calc. side's when 2 side's known - pyth
         if (x == "a" || x == "b" || x == "c" && Info.side_count == 2) {
             if (Info.A == 90) {
@@ -975,8 +969,7 @@ void calculations(Triangle& Info, std::string x) {
                 ans = sqrt((pow(Info.b, 2)) - (pow(Info.a, 2)) + (2 * Info.b * Info.a * cos(Info.Br)));
             }
         }
-    }
-    else {
+    } else {
         error(2, x);
         return;
     }
