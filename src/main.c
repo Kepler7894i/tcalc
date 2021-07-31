@@ -6,8 +6,8 @@
 #ifndef _WIN32
 #include <unistd.h>
 #endif
-//#define Debug;
-//#define Testing;
+#define Debug;
+#define Testing;
 
 int main(int argc, char** argv);
 void UserInput();
@@ -882,6 +882,10 @@ void Calculations(struct TriangleInfoStruct TriangleInfo, char* WantedProperty) 
 }
 
 void UserInput() {
+    #ifdef Debug
+    printf("UserInput entry successful.")
+    #endif
+
     struct TriangleInfoStruct TriangleInfo;
 
     char* WantedProperty;
@@ -1227,18 +1231,10 @@ int main(int argc, char** argv) {
     char* ArgumentFile;
     bool Help = false, FileMode = false;
 
-    while (Argument = getopt(argc, argv, "htdf:")) {
+    while (Argument = getopt(argc, argv, "hf:")) {
         switch (Argument) {
             case 'h': {
                 Help = true;
-            } case 't': {
-                Testing = true;
-
-                break;
-            } case 'd': {
-                Debug = true;
-
-                break;
             } case 'f': {
                 FileMode = true;
                 ArgumentFile = optarg;
@@ -1260,9 +1256,7 @@ int main(int argc, char** argv) {
 
     #ifdef Debug
     printf("\n\nHelp: %s", Help ? "true" : "false");
-    printf("\nTesting: %s", Testing ? "true" : "false");
-    printf("\nDebug: %s", Debug ? "true" : "false");
-    printf("\nfileMode: %s", FileMode ? "true" : "false");
+    printf("\nFileMode: %s", FileMode ? "true" : "false");
     printf("\n");
     #endif
 
@@ -1270,8 +1264,6 @@ int main(int argc, char** argv) {
         printf("\nUsage: tcalc [OPTION/InputFile IF APPLICABLE]...");
         printf("\n\nWith no OPTION(s) default execute UserInput()");
         printf("\n\n  -h          Output Help InputFile");
-        printf("\n  -t          Set bool Testing = true");
-        printf("\n  -d          Set bool Debug = true");
         printf("\n  -f [InputFile]   Override default and execute FileInput(InputFile)");
         printf("\n\nSource code and documentation: <https://github.com/Kepler7894i/triangle-calculator>");
         
@@ -1279,8 +1271,16 @@ int main(int argc, char** argv) {
     }
 
     if (FileMode) {
+        #ifdef Debug
+        printf("Entering FileInput()");
+        #endif
+
         FileInput(ArgumentFile);
-    } else if (!FileMode) {
+    } else {
+        #ifdef Debug
+        printf("Entering UserInput()");
+        #endif
+
         UserInput();
     }
 
