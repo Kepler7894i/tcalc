@@ -21,7 +21,7 @@ struct TriangleInfoStruct {
     //int AngleCount = 0, SideCount = 0;
     float A, B, C, Ar, Br, Cr, a, b, c, Area, Solution;
     int AngleCount, SideCount;
-};
+} TriangleInfo;
 
 void DegreesToRadians(float* Radians, float Degrees) {
     *Radians = (Degrees * PI) / 180;
@@ -883,7 +883,7 @@ void Calculations(struct TriangleInfoStruct TriangleInfo, char* WantedProperty) 
 
 void UserInput() {
     #ifdef Debug
-    printf("UserInput entry successful.")
+    printf("\nUserInput entry successful.\n");
     #endif
 
     struct TriangleInfoStruct TriangleInfo;
@@ -1278,7 +1278,7 @@ int main(int argc, char** argv) {
         FileInput(ArgumentFile);
     } else {
         #ifdef Debug
-        printf("Entering UserInput()");
+        printf("\n\nEntering UserInput()");
         #endif
 
         UserInput();
